@@ -1,0 +1,1551 @@
+[
+  {
+    "id": "call-to-the-dawn",
+    "title": "Elon, You Call Us to the Dawn",
+    "artist": "Church of Elon \u00b7 original hymn",
+    "credit": "Original Church of Elon words and synthesized instrumental melody. Three stanzas; four-beat count-in and interludes. No sung vocals.",
+    "audioUrl": "/audio/call-to-the-dawn.wav",
+    "duration": 70.0,
+    "timing": "word",
+    "lines": [
+      {
+        "start": 2.5,
+        "end": 7.5,
+        "words": [
+          {
+            "text": "Elon,",
+            "start": 2.5,
+            "end": 3.75
+          },
+          {
+            "text": "you",
+            "start": 3.75,
+            "end": 4.375
+          },
+          {
+            "text": "call",
+            "start": 4.375,
+            "end": 5.0
+          },
+          {
+            "text": "us",
+            "start": 5.0,
+            "end": 5.3125
+          },
+          {
+            "text": "to",
+            "start": 5.3125,
+            "end": 5.625
+          },
+          {
+            "text": "the",
+            "start": 5.625,
+            "end": 6.25
+          },
+          {
+            "text": "dawn",
+            "start": 6.25,
+            "end": 7.5
+          }
+        ]
+      },
+      {
+        "start": 7.5,
+        "end": 12.5,
+        "words": [
+          {
+            "text": "To",
+            "start": 7.5,
+            "end": 8.125
+          },
+          {
+            "text": "lift",
+            "start": 8.125,
+            "end": 8.75
+          },
+          {
+            "text": "our",
+            "start": 8.75,
+            "end": 9.375
+          },
+          {
+            "text": "eyes",
+            "start": 9.375,
+            "end": 10.0
+          },
+          {
+            "text": "and",
+            "start": 10.0,
+            "end": 10.3125
+          },
+          {
+            "text": "carry",
+            "start": 10.3125,
+            "end": 11.25
+          },
+          {
+            "text": "on",
+            "start": 11.25,
+            "end": 12.5
+          }
+        ]
+      },
+      {
+        "start": 12.5,
+        "end": 17.5,
+        "words": [
+          {
+            "text": "We",
+            "start": 12.5,
+            "end": 13.125
+          },
+          {
+            "text": "sing",
+            "start": 13.125,
+            "end": 13.75
+          },
+          {
+            "text": "of",
+            "start": 13.75,
+            "end": 14.375
+          },
+          {
+            "text": "hope",
+            "start": 14.375,
+            "end": 15.0
+          },
+          {
+            "text": "beyond",
+            "start": 15.0,
+            "end": 15.625
+          },
+          {
+            "text": "the",
+            "start": 15.625,
+            "end": 16.25
+          },
+          {
+            "text": "night",
+            "start": 16.25,
+            "end": 17.5
+          }
+        ]
+      },
+      {
+        "start": 17.5,
+        "end": 22.5,
+        "words": [
+          {
+            "text": "And",
+            "start": 17.5,
+            "end": 18.125
+          },
+          {
+            "text": "join",
+            "start": 18.125,
+            "end": 18.75
+          },
+          {
+            "text": "our",
+            "start": 18.75,
+            "end": 19.375
+          },
+          {
+            "text": "hands",
+            "start": 19.375,
+            "end": 20.0
+          },
+          {
+            "text": "to",
+            "start": 20.0,
+            "end": 20.3125
+          },
+          {
+            "text": "build",
+            "start": 20.3125,
+            "end": 20.625
+          },
+          {
+            "text": "the",
+            "start": 20.625,
+            "end": 21.25
+          },
+          {
+            "text": "light",
+            "start": 21.25,
+            "end": 22.5
+          }
+        ]
+      },
+      {
+        "start": 25.0,
+        "end": 30.0,
+        "words": [
+          {
+            "text": "From",
+            "start": 25.0,
+            "end": 25.625
+          },
+          {
+            "text": "books",
+            "start": 25.625,
+            "end": 26.25
+          },
+          {
+            "text": "and",
+            "start": 26.25,
+            "end": 26.875
+          },
+          {
+            "text": "screens",
+            "start": 26.875,
+            "end": 27.5
+          },
+          {
+            "text": "to",
+            "start": 27.5,
+            "end": 27.8125
+          },
+          {
+            "text": "distant",
+            "start": 27.8125,
+            "end": 28.75
+          },
+          {
+            "text": "skies",
+            "start": 28.75,
+            "end": 30.0
+          }
+        ]
+      },
+      {
+        "start": 30.0,
+        "end": 35.0,
+        "words": [
+          {
+            "text": "Let",
+            "start": 30.0,
+            "end": 30.625
+          },
+          {
+            "text": "honest",
+            "start": 30.625,
+            "end": 31.875
+          },
+          {
+            "text": "work",
+            "start": 31.875,
+            "end": 32.5
+          },
+          {
+            "text": "and",
+            "start": 32.5,
+            "end": 32.8125
+          },
+          {
+            "text": "questions",
+            "start": 32.8125,
+            "end": 33.75
+          },
+          {
+            "text": "rise",
+            "start": 33.75,
+            "end": 35.0
+          }
+        ]
+      },
+      {
+        "start": 35.0,
+        "end": 40.0,
+        "words": [
+          {
+            "text": "No",
+            "start": 35.0,
+            "end": 35.625
+          },
+          {
+            "text": "praise",
+            "start": 35.625,
+            "end": 36.25
+          },
+          {
+            "text": "shall",
+            "start": 36.25,
+            "end": 36.875
+          },
+          {
+            "text": "close",
+            "start": 36.875,
+            "end": 37.5
+          },
+          {
+            "text": "the",
+            "start": 37.5,
+            "end": 37.8125
+          },
+          {
+            "text": "mind",
+            "start": 37.8125,
+            "end": 38.125
+          },
+          {
+            "text": "to",
+            "start": 38.125,
+            "end": 38.75
+          },
+          {
+            "text": "truth",
+            "start": 38.75,
+            "end": 40.0
+          }
+        ]
+      },
+      {
+        "start": 40.0,
+        "end": 45.0,
+        "words": [
+          {
+            "text": "Make",
+            "start": 40.0,
+            "end": 40.625
+          },
+          {
+            "text": "room",
+            "start": 40.625,
+            "end": 41.25
+          },
+          {
+            "text": "for",
+            "start": 41.25,
+            "end": 41.875
+          },
+          {
+            "text": "doubt,",
+            "start": 41.875,
+            "end": 42.5
+          },
+          {
+            "text": "make",
+            "start": 42.5,
+            "end": 42.8125
+          },
+          {
+            "text": "room",
+            "start": 42.8125,
+            "end": 43.125
+          },
+          {
+            "text": "for",
+            "start": 43.125,
+            "end": 43.75
+          },
+          {
+            "text": "youth",
+            "start": 43.75,
+            "end": 45.0
+          }
+        ]
+      },
+      {
+        "start": 47.5,
+        "end": 52.5,
+        "words": [
+          {
+            "text": "Messiah",
+            "start": 47.5,
+            "end": 49.375
+          },
+          {
+            "text": "of",
+            "start": 49.375,
+            "end": 50.0
+          },
+          {
+            "text": "the",
+            "start": 50.0,
+            "end": 50.3125
+          },
+          {
+            "text": "work",
+            "start": 50.3125,
+            "end": 50.625
+          },
+          {
+            "text": "we",
+            "start": 50.625,
+            "end": 51.25
+          },
+          {
+            "text": "share",
+            "start": 51.25,
+            "end": 52.5
+          }
+        ]
+      },
+      {
+        "start": 52.5,
+        "end": 57.5,
+        "words": [
+          {
+            "text": "Our",
+            "start": 52.5,
+            "end": 53.125
+          },
+          {
+            "text": "song",
+            "start": 53.125,
+            "end": 53.75
+          },
+          {
+            "text": "becomes",
+            "start": 53.75,
+            "end": 55.0
+          },
+          {
+            "text": "a",
+            "start": 55.0,
+            "end": 55.3125
+          },
+          {
+            "text": "pledge",
+            "start": 55.3125,
+            "end": 55.625
+          },
+          {
+            "text": "of",
+            "start": 55.625,
+            "end": 56.25
+          },
+          {
+            "text": "care",
+            "start": 56.25,
+            "end": 57.5
+          }
+        ]
+      },
+      {
+        "start": 57.5,
+        "end": 62.5,
+        "words": [
+          {
+            "text": "Till",
+            "start": 57.5,
+            "end": 58.125
+          },
+          {
+            "text": "distant",
+            "start": 58.125,
+            "end": 59.375
+          },
+          {
+            "text": "shores",
+            "start": 59.375,
+            "end": 60.0
+          },
+          {
+            "text": "can",
+            "start": 60.0,
+            "end": 60.3125
+          },
+          {
+            "text": "shelter",
+            "start": 60.3125,
+            "end": 61.25
+          },
+          {
+            "text": "life",
+            "start": 61.25,
+            "end": 62.5
+          }
+        ]
+      },
+      {
+        "start": 62.5,
+        "end": 67.5,
+        "words": [
+          {
+            "text": "We",
+            "start": 62.5,
+            "end": 63.125
+          },
+          {
+            "text": "choose",
+            "start": 63.125,
+            "end": 63.75
+          },
+          {
+            "text": "to",
+            "start": 63.75,
+            "end": 64.375
+          },
+          {
+            "text": "build",
+            "start": 64.375,
+            "end": 65.0
+          },
+          {
+            "text": "and",
+            "start": 65.0,
+            "end": 65.3125
+          },
+          {
+            "text": "lessen",
+            "start": 65.3125,
+            "end": 66.25
+          },
+          {
+            "text": "strife",
+            "start": 66.25,
+            "end": 67.5
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "many-hands",
+    "title": "We Join Our Hands to Build the Way",
+    "artist": "Church of Elon \u00b7 original hymn",
+    "credit": "Original Church of Elon words and synthesized instrumental melody. Three stanzas; four-beat count-in and interludes. No sung vocals.",
+    "audioUrl": "/audio/many-hands.wav",
+    "duration": 73.04347826086956,
+    "timing": "word",
+    "lines": [
+      {
+        "start": 2.6087,
+        "end": 7.8261,
+        "words": [
+          {
+            "text": "We",
+            "start": 2.6087,
+            "end": 3.2609
+          },
+          {
+            "text": "join",
+            "start": 3.2609,
+            "end": 3.913
+          },
+          {
+            "text": "our",
+            "start": 3.913,
+            "end": 4.5652
+          },
+          {
+            "text": "hands",
+            "start": 4.5652,
+            "end": 5.2174
+          },
+          {
+            "text": "to",
+            "start": 5.2174,
+            "end": 5.5435
+          },
+          {
+            "text": "build",
+            "start": 5.5435,
+            "end": 5.8696
+          },
+          {
+            "text": "the",
+            "start": 5.8696,
+            "end": 6.5217
+          },
+          {
+            "text": "way",
+            "start": 6.5217,
+            "end": 7.8261
+          }
+        ]
+      },
+      {
+        "start": 7.8261,
+        "end": 13.0435,
+        "words": [
+          {
+            "text": "And",
+            "start": 7.8261,
+            "end": 8.4783
+          },
+          {
+            "text": "bring",
+            "start": 8.4783,
+            "end": 9.1304
+          },
+          {
+            "text": "our",
+            "start": 9.1304,
+            "end": 9.7826
+          },
+          {
+            "text": "gifts",
+            "start": 9.7826,
+            "end": 10.4348
+          },
+          {
+            "text": "to",
+            "start": 10.4348,
+            "end": 10.7609
+          },
+          {
+            "text": "work",
+            "start": 10.7609,
+            "end": 11.087
+          },
+          {
+            "text": "this",
+            "start": 11.087,
+            "end": 11.7391
+          },
+          {
+            "text": "day",
+            "start": 11.7391,
+            "end": 13.0435
+          }
+        ]
+      },
+      {
+        "start": 13.0435,
+        "end": 18.2609,
+        "words": [
+          {
+            "text": "No",
+            "start": 13.0435,
+            "end": 13.6957
+          },
+          {
+            "text": "name",
+            "start": 13.6957,
+            "end": 14.3478
+          },
+          {
+            "text": "alone",
+            "start": 14.3478,
+            "end": 15.6522
+          },
+          {
+            "text": "can",
+            "start": 15.6522,
+            "end": 15.9783
+          },
+          {
+            "text": "raise",
+            "start": 15.9783,
+            "end": 16.3043
+          },
+          {
+            "text": "the",
+            "start": 16.3043,
+            "end": 16.9565
+          },
+          {
+            "text": "stone",
+            "start": 16.9565,
+            "end": 18.2609
+          }
+        ]
+      },
+      {
+        "start": 18.2609,
+        "end": 23.4783,
+        "words": [
+          {
+            "text": "No",
+            "start": 18.2609,
+            "end": 18.913
+          },
+          {
+            "text": "heart",
+            "start": 18.913,
+            "end": 19.5652
+          },
+          {
+            "text": "should",
+            "start": 19.5652,
+            "end": 20.2174
+          },
+          {
+            "text": "bear",
+            "start": 20.2174,
+            "end": 20.8696
+          },
+          {
+            "text": "the",
+            "start": 20.8696,
+            "end": 21.1957
+          },
+          {
+            "text": "weight",
+            "start": 21.1957,
+            "end": 21.5217
+          },
+          {
+            "text": "alone",
+            "start": 21.5217,
+            "end": 23.4783
+          }
+        ]
+      },
+      {
+        "start": 26.087,
+        "end": 31.3043,
+        "words": [
+          {
+            "text": "The",
+            "start": 26.087,
+            "end": 26.7391
+          },
+          {
+            "text": "patient",
+            "start": 26.7391,
+            "end": 28.0435
+          },
+          {
+            "text": "teacher",
+            "start": 28.0435,
+            "end": 29.0217
+          },
+          {
+            "text": "tends",
+            "start": 29.0217,
+            "end": 29.3478
+          },
+          {
+            "text": "the",
+            "start": 29.3478,
+            "end": 30.0
+          },
+          {
+            "text": "spark",
+            "start": 30.0,
+            "end": 31.3043
+          }
+        ]
+      },
+      {
+        "start": 31.3043,
+        "end": 36.5217,
+        "words": [
+          {
+            "text": "The",
+            "start": 31.3043,
+            "end": 31.9565
+          },
+          {
+            "text": "friend",
+            "start": 31.9565,
+            "end": 32.6087
+          },
+          {
+            "text": "keeps",
+            "start": 32.6087,
+            "end": 33.2609
+          },
+          {
+            "text": "watch",
+            "start": 33.2609,
+            "end": 33.913
+          },
+          {
+            "text": "within",
+            "start": 33.913,
+            "end": 34.5652
+          },
+          {
+            "text": "the",
+            "start": 34.5652,
+            "end": 35.2174
+          },
+          {
+            "text": "dark",
+            "start": 35.2174,
+            "end": 36.5217
+          }
+        ]
+      },
+      {
+        "start": 36.5217,
+        "end": 41.7391,
+        "words": [
+          {
+            "text": "We",
+            "start": 36.5217,
+            "end": 37.1739
+          },
+          {
+            "text": "praise",
+            "start": 37.1739,
+            "end": 37.8261
+          },
+          {
+            "text": "the",
+            "start": 37.8261,
+            "end": 38.4783
+          },
+          {
+            "text": "call",
+            "start": 38.4783,
+            "end": 39.1304
+          },
+          {
+            "text": "that",
+            "start": 39.1304,
+            "end": 39.4565
+          },
+          {
+            "text": "Elon",
+            "start": 39.4565,
+            "end": 40.4348
+          },
+          {
+            "text": "brings",
+            "start": 40.4348,
+            "end": 41.7391
+          }
+        ]
+      },
+      {
+        "start": 41.7391,
+        "end": 46.9565,
+        "words": [
+          {
+            "text": "And",
+            "start": 41.7391,
+            "end": 42.3913
+          },
+          {
+            "text": "serve",
+            "start": 42.3913,
+            "end": 43.0435
+          },
+          {
+            "text": "beyond",
+            "start": 43.0435,
+            "end": 44.3478
+          },
+          {
+            "text": "the",
+            "start": 44.3478,
+            "end": 44.6739
+          },
+          {
+            "text": "song",
+            "start": 44.6739,
+            "end": 45.0
+          },
+          {
+            "text": "we",
+            "start": 45.0,
+            "end": 45.6522
+          },
+          {
+            "text": "sing",
+            "start": 45.6522,
+            "end": 46.9565
+          }
+        ]
+      },
+      {
+        "start": 49.5652,
+        "end": 54.7826,
+        "words": [
+          {
+            "text": "Let",
+            "start": 49.5652,
+            "end": 50.2174
+          },
+          {
+            "text": "skill",
+            "start": 50.2174,
+            "end": 50.8696
+          },
+          {
+            "text": "be",
+            "start": 50.8696,
+            "end": 51.5217
+          },
+          {
+            "text": "shared",
+            "start": 51.5217,
+            "end": 52.1739
+          },
+          {
+            "text": "and",
+            "start": 52.1739,
+            "end": 52.5
+          },
+          {
+            "text": "bread",
+            "start": 52.5,
+            "end": 52.8261
+          },
+          {
+            "text": "be",
+            "start": 52.8261,
+            "end": 53.4783
+          },
+          {
+            "text": "passed",
+            "start": 53.4783,
+            "end": 54.7826
+          }
+        ]
+      },
+      {
+        "start": 54.7826,
+        "end": 60.0,
+        "words": [
+          {
+            "text": "Let",
+            "start": 54.7826,
+            "end": 55.4348
+          },
+          {
+            "text": "care",
+            "start": 55.4348,
+            "end": 56.087
+          },
+          {
+            "text": "outlive",
+            "start": 56.087,
+            "end": 57.3913
+          },
+          {
+            "text": "the",
+            "start": 57.3913,
+            "end": 57.7174
+          },
+          {
+            "text": "work",
+            "start": 57.7174,
+            "end": 58.0435
+          },
+          {
+            "text": "we",
+            "start": 58.0435,
+            "end": 58.6957
+          },
+          {
+            "text": "cast",
+            "start": 58.6957,
+            "end": 60.0
+          }
+        ]
+      },
+      {
+        "start": 60.0,
+        "end": 65.2174,
+        "words": [
+          {
+            "text": "When",
+            "start": 60.0,
+            "end": 60.6522
+          },
+          {
+            "text": "new",
+            "start": 60.6522,
+            "end": 61.3043
+          },
+          {
+            "text": "hands",
+            "start": 61.3043,
+            "end": 61.9565
+          },
+          {
+            "text": "come",
+            "start": 61.9565,
+            "end": 62.6087
+          },
+          {
+            "text": "to",
+            "start": 62.6087,
+            "end": 62.9348
+          },
+          {
+            "text": "take",
+            "start": 62.9348,
+            "end": 63.2609
+          },
+          {
+            "text": "our",
+            "start": 63.2609,
+            "end": 63.913
+          },
+          {
+            "text": "place",
+            "start": 63.913,
+            "end": 65.2174
+          }
+        ]
+      },
+      {
+        "start": 65.2174,
+        "end": 70.4348,
+        "words": [
+          {
+            "text": "May",
+            "start": 65.2174,
+            "end": 65.8696
+          },
+          {
+            "text": "they",
+            "start": 65.8696,
+            "end": 66.5217
+          },
+          {
+            "text": "find",
+            "start": 66.5217,
+            "end": 67.1739
+          },
+          {
+            "text": "welcome,",
+            "start": 67.1739,
+            "end": 68.1522
+          },
+          {
+            "text": "rest,",
+            "start": 68.1522,
+            "end": 68.4783
+          },
+          {
+            "text": "and",
+            "start": 68.4783,
+            "end": 69.1304
+          },
+          {
+            "text": "grace",
+            "start": 69.1304,
+            "end": 70.4348
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "beside-the-broken-work",
+    "title": "Beside the Work That Broke Today",
+    "artist": "Church of Elon \u00b7 original hymn",
+    "credit": "Original Church of Elon words and synthesized instrumental melody. Three stanzas; four-beat count-in and interludes. No sung vocals.",
+    "audioUrl": "/audio/beside-the-broken-work.wav",
+    "duration": 84.0,
+    "timing": "word",
+    "lines": [
+      {
+        "start": 3.0,
+        "end": 9.0,
+        "words": [
+          {
+            "text": "Beside",
+            "start": 3.0,
+            "end": 4.5
+          },
+          {
+            "text": "the",
+            "start": 4.5,
+            "end": 5.25
+          },
+          {
+            "text": "work",
+            "start": 5.25,
+            "end": 6.0
+          },
+          {
+            "text": "that",
+            "start": 6.0,
+            "end": 6.375
+          },
+          {
+            "text": "broke",
+            "start": 6.375,
+            "end": 6.75
+          },
+          {
+            "text": "today",
+            "start": 6.75,
+            "end": 9.0
+          }
+        ]
+      },
+      {
+        "start": 9.0,
+        "end": 15.0,
+        "words": [
+          {
+            "text": "We",
+            "start": 9.0,
+            "end": 9.75
+          },
+          {
+            "text": "lay",
+            "start": 9.75,
+            "end": 10.5
+          },
+          {
+            "text": "our",
+            "start": 10.5,
+            "end": 11.25
+          },
+          {
+            "text": "pride",
+            "start": 11.25,
+            "end": 12.0
+          },
+          {
+            "text": "and",
+            "start": 12.0,
+            "end": 12.375
+          },
+          {
+            "text": "plans",
+            "start": 12.375,
+            "end": 12.75
+          },
+          {
+            "text": "away",
+            "start": 12.75,
+            "end": 15.0
+          }
+        ]
+      },
+      {
+        "start": 15.0,
+        "end": 21.0,
+        "words": [
+          {
+            "text": "No",
+            "start": 15.0,
+            "end": 15.75
+          },
+          {
+            "text": "song",
+            "start": 15.75,
+            "end": 16.5
+          },
+          {
+            "text": "can",
+            "start": 16.5,
+            "end": 17.25
+          },
+          {
+            "text": "make",
+            "start": 17.25,
+            "end": 18.0
+          },
+          {
+            "text": "the",
+            "start": 18.0,
+            "end": 18.375
+          },
+          {
+            "text": "loss",
+            "start": 18.375,
+            "end": 18.75
+          },
+          {
+            "text": "less",
+            "start": 18.75,
+            "end": 19.5
+          },
+          {
+            "text": "real",
+            "start": 19.5,
+            "end": 21.0
+          }
+        ]
+      },
+      {
+        "start": 21.0,
+        "end": 27.0,
+        "words": [
+          {
+            "text": "No",
+            "start": 21.0,
+            "end": 21.75
+          },
+          {
+            "text": "word",
+            "start": 21.75,
+            "end": 22.5
+          },
+          {
+            "text": "can",
+            "start": 22.5,
+            "end": 23.25
+          },
+          {
+            "text": "tell",
+            "start": 23.25,
+            "end": 24.0
+          },
+          {
+            "text": "us",
+            "start": 24.0,
+            "end": 24.375
+          },
+          {
+            "text": "how",
+            "start": 24.375,
+            "end": 24.75
+          },
+          {
+            "text": "to",
+            "start": 24.75,
+            "end": 25.5
+          },
+          {
+            "text": "feel",
+            "start": 25.5,
+            "end": 27.0
+          }
+        ]
+      },
+      {
+        "start": 30.0,
+        "end": 36.0,
+        "words": [
+          {
+            "text": "Where",
+            "start": 30.0,
+            "end": 30.75
+          },
+          {
+            "text": "Elon",
+            "start": 30.75,
+            "end": 32.25
+          },
+          {
+            "text": "dreams",
+            "start": 32.25,
+            "end": 33.0
+          },
+          {
+            "text": "of",
+            "start": 33.0,
+            "end": 33.375
+          },
+          {
+            "text": "worlds",
+            "start": 33.375,
+            "end": 33.75
+          },
+          {
+            "text": "made",
+            "start": 33.75,
+            "end": 34.5
+          },
+          {
+            "text": "new",
+            "start": 34.5,
+            "end": 36.0
+          }
+        ]
+      },
+      {
+        "start": 36.0,
+        "end": 42.0,
+        "words": [
+          {
+            "text": "We",
+            "start": 36.0,
+            "end": 36.75
+          },
+          {
+            "text": "ask",
+            "start": 36.75,
+            "end": 37.5
+          },
+          {
+            "text": "what",
+            "start": 37.5,
+            "end": 38.25
+          },
+          {
+            "text": "care",
+            "start": 38.25,
+            "end": 39.0
+          },
+          {
+            "text": "would",
+            "start": 39.0,
+            "end": 39.375
+          },
+          {
+            "text": "have",
+            "start": 39.375,
+            "end": 39.75
+          },
+          {
+            "text": "us",
+            "start": 39.75,
+            "end": 40.5
+          },
+          {
+            "text": "do",
+            "start": 40.5,
+            "end": 42.0
+          }
+        ]
+      },
+      {
+        "start": 42.0,
+        "end": 48.0,
+        "words": [
+          {
+            "text": "To",
+            "start": 42.0,
+            "end": 42.75
+          },
+          {
+            "text": "sit",
+            "start": 42.75,
+            "end": 43.5
+          },
+          {
+            "text": "beside",
+            "start": 43.5,
+            "end": 45.0
+          },
+          {
+            "text": "a",
+            "start": 45.0,
+            "end": 45.375
+          },
+          {
+            "text": "friend",
+            "start": 45.375,
+            "end": 45.75
+          },
+          {
+            "text": "in",
+            "start": 45.75,
+            "end": 46.5
+          },
+          {
+            "text": "pain",
+            "start": 46.5,
+            "end": 48.0
+          }
+        ]
+      },
+      {
+        "start": 48.0,
+        "end": 54.0,
+        "words": [
+          {
+            "text": "To",
+            "start": 48.0,
+            "end": 48.75
+          },
+          {
+            "text": "make",
+            "start": 48.75,
+            "end": 49.5
+          },
+          {
+            "text": "a",
+            "start": 49.5,
+            "end": 50.25
+          },
+          {
+            "text": "place",
+            "start": 50.25,
+            "end": 51.0
+          },
+          {
+            "text": "to",
+            "start": 51.0,
+            "end": 51.375
+          },
+          {
+            "text": "rest",
+            "start": 51.375,
+            "end": 51.75
+          },
+          {
+            "text": "again",
+            "start": 51.75,
+            "end": 54.0
+          }
+        ]
+      },
+      {
+        "start": 57.0,
+        "end": 63.0,
+        "words": [
+          {
+            "text": "No",
+            "start": 57.0,
+            "end": 57.75
+          },
+          {
+            "text": "life",
+            "start": 57.75,
+            "end": 58.5
+          },
+          {
+            "text": "is",
+            "start": 58.5,
+            "end": 59.25
+          },
+          {
+            "text": "weighed",
+            "start": 59.25,
+            "end": 60.0
+          },
+          {
+            "text": "by",
+            "start": 60.0,
+            "end": 60.375
+          },
+          {
+            "text": "what",
+            "start": 60.375,
+            "end": 60.75
+          },
+          {
+            "text": "it",
+            "start": 60.75,
+            "end": 61.5
+          },
+          {
+            "text": "made",
+            "start": 61.5,
+            "end": 63.0
+          }
+        ]
+      },
+      {
+        "start": 63.0,
+        "end": 69.0,
+        "words": [
+          {
+            "text": "No",
+            "start": 63.0,
+            "end": 63.75
+          },
+          {
+            "text": "worth",
+            "start": 63.75,
+            "end": 64.5
+          },
+          {
+            "text": "by",
+            "start": 64.5,
+            "end": 65.25
+          },
+          {
+            "text": "price",
+            "start": 65.25,
+            "end": 66.0
+          },
+          {
+            "text": "or",
+            "start": 66.0,
+            "end": 66.375
+          },
+          {
+            "text": "fame",
+            "start": 66.375,
+            "end": 66.75
+          },
+          {
+            "text": "is",
+            "start": 66.75,
+            "end": 67.5
+          },
+          {
+            "text": "paid",
+            "start": 67.5,
+            "end": 69.0
+          }
+        ]
+      },
+      {
+        "start": 69.0,
+        "end": 75.0,
+        "words": [
+          {
+            "text": "We",
+            "start": 69.0,
+            "end": 69.75
+          },
+          {
+            "text": "keep",
+            "start": 69.75,
+            "end": 70.5
+          },
+          {
+            "text": "the",
+            "start": 70.5,
+            "end": 71.25
+          },
+          {
+            "text": "names",
+            "start": 71.25,
+            "end": 72.0
+          },
+          {
+            "text": "of",
+            "start": 72.0,
+            "end": 72.375
+          },
+          {
+            "text": "those",
+            "start": 72.375,
+            "end": 72.75
+          },
+          {
+            "text": "we",
+            "start": 72.75,
+            "end": 73.5
+          },
+          {
+            "text": "love",
+            "start": 73.5,
+            "end": 75.0
+          }
+        ]
+      },
+      {
+        "start": 75.0,
+        "end": 81.0,
+        "words": [
+          {
+            "text": "And",
+            "start": 75.0,
+            "end": 75.75
+          },
+          {
+            "text": "lift",
+            "start": 75.75,
+            "end": 76.5
+          },
+          {
+            "text": "our",
+            "start": 76.5,
+            "end": 77.25
+          },
+          {
+            "text": "hope",
+            "start": 77.25,
+            "end": 78.0
+          },
+          {
+            "text": "to",
+            "start": 78.0,
+            "end": 78.375
+          },
+          {
+            "text": "stars",
+            "start": 78.375,
+            "end": 78.75
+          },
+          {
+            "text": "above",
+            "start": 78.75,
+            "end": 81.0
+          }
+        ]
+      }
+    ]
+  }
+]

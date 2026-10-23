@@ -17,12 +17,13 @@
       try { t = localStorage.getItem('stores-theme'); } catch (e) {}
       var d = t === 'dark' || (t !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
       if (d) document.documentElement.dataset.theme = 'dark';
-      document.documentElement.style.background = d ? '#000000' : '#ffffff';
+      document.documentElement.style.background = d ? '#0f172a' : '#f8fafc';
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <title>karaoke — FreeAppStore</title>
+    <title>Karaoke — Sing along · FreeAppStore</title>
+    <meta name="description" content="Make a sing-along from your recording and lyrics. Word highlighting, a timing editor, and microphone follow — free and local to your browser." />
     <!-- Platform analytics loader. CF Web Analytics is auto-provisioned at publish;
          GA4 / Plausible / custom <head> are opt-in via PUT /v1/apps/karaoke/analytics. -->
     <script src="https://api.freeappstore.online/v1/analytics.js?app=karaoke" defer></script>

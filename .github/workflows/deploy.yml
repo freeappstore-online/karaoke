@@ -43,6 +43,9 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile
 
+      - name: Signal and lyric tests
+        run: pnpm test
+
       # Build. If your app uses VITE_* public config (OAuth client IDs,
       # Firebase config, etc.), add them as GitHub repo Variables and
       # pass them here. See SKILLS.md "App Config & Secrets" section.

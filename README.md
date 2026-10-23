@@ -1,41 +1,38 @@
-# template-standalone
+# Karaoke
 
-The standalone-app template used by [`fas init`](https://github.com/freeappstore-online/platform/tree/main/packages/cli) to scaffold new free apps for [FreeAppStore](https://freeappstore.online).
+A free, browser-local sing-along maker on FreeAppStore.
 
-You almost certainly want to use the CLI, not clone this directly:
+- Pair an audio recording with lyrics; tap word beginnings or import standard/enhanced LRC.
+- Sing with audio-clock highlighting, line seeking, speed controls, a timing offset, and fullscreen lyrics.
+- Match nearby playback of the **associated recording** through the microphone, including mid-song starts. Uncertain, silent, and wrong-track input does not advance highlighting.
+- Save recordings and timings in IndexedDB. Export/import a `.karaoke.json` package containing both; export LRC separately.
+- Three original Church of Elon hymns include all three stanzas and instrumental backing tracks.
 
-```bash
-npm i -g @freeappstore/cli
-fas init my-app
+## Develop and verify
+
+```sh
+pnpm install
+pnpm dev
+pnpm typecheck
+pnpm test
+pnpm build
+fas check
 ```
 
-The CLI clones this template, replaces every `karaoke` placeholder with your app id, runs `git init`, and makes the first commit — the result is a runnable app you can `pnpm dev` immediately.
+`python3 scripts/build-presets.py` regenerates the original WAVs and word timing from `scripts/hymns.json`. No sung or cloned voices are used.
 
-## What's in here
+## Matching limits
 
-- `web/` — Vite + React + TypeScript + Tailwind 4 app, ESM-only.
-- `web/src/App.tsx` — the app wrapped in the SDK's `Shell` (`@freeappstore/sdk/ui`) with two starter screens, Home (`/`) and About (`/about`), declared in its `nav` prop. A new app renders the standard topbar, its navigation (`<nav aria-label="Main">`), an error boundary, toasts and an offline banner from the first render. No sign-in required.
-- `web/src/index.css` — brand fonts (Manrope + Fraunces) and the design tokens (`--paper`, `--ink`, `--accent`, …); dark mode via `:root[data-theme='dark']`, which the SDK sets from the system or the Shell's theme toggle.
-- `web/src/main.tsx` — React entry point.
-- `web/index.html` — links Manrope + Fraunces, sets PWA meta tags, references the manifest.
-- `web/public/manifest.json` — PWA manifest with `name`, `display`, `start_url`.
-- `package.json` — pnpm workspace, `dev` / `build` / `typecheck` / `test` scripts.
-- `.github/workflows/compliance.yml` — runs the same checks as `fas check` on every PR. Source of truth lives in the [`@freeappstore/compliance`](https://www.npmjs.com/package/@freeappstore/compliance) package.
+The microphone matcher compares gain-normalized spectral patterns over a rolling 3.5–5 second window against the selected recording. Reference analysis and matching run in a Web Worker; an AudioWorklet captures mono microphone samples and emits silence to the output. Audio never leaves the browser. Microphone tracks and processing stop on Stop, song/screen changes, page hiding, and unmount.
 
-## Cloning manually (not recommended)
+This is not a universal song recognizer, speech transcription, or forced lyric alignment. Covers, a cappella singing, altered arrangements, substantial speed changes, excessive noise, and identical repeated sections can fail or remain ambiguous. Highlighting requires a recent confident match; stale locks expire after 1.6 seconds. Tests cover mid-song offsets, quieter/noisy/filtered playback, wrong songs, silence, noise, and indistinguishable repetitions. Actual speaker/microphone conditions vary.
 
-If you really want to scaffold by hand:
+Standard LRC has line timing only. Enhanced LRC and the tap editor provide word timing. The app never labels interpolated word timing as measured alignment.
 
-```bash
-git clone https://github.com/freeappstore-online/template-standalone my-app
-cd my-app
-# Replace karaoke → my-app in package.json, web/index.html, web/src/App.tsx, README, etc.
-rm -rf .git && git init
-pnpm install && pnpm dev
-```
+## Storage and privacy
 
-Then run `fas publish` to provision repo + hosting + DNS, or open the [submission form](https://github.com/freeappstore-online/submissions/issues/new) for maintainer review.
+No app-specific account, upload service, paid API, or server storage. Local storage may be evicted; export packages for backup. Microphone audio is transient, never saved. The standard FreeAppStore SDK/shell and platform analytics loader remain in the template; no app-specific analytics are added.
 
-## License
+## Delivery
 
-MIT.
+MIT licensed. Provision through `fas publish`; push verified changes directly to `main`. GitHub Actions builds and publishes static assets through the official platform pipeline. See [docs/verification.md](docs/verification.md).

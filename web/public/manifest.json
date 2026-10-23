@@ -1,14 +1,31 @@
 {
-  "name": "karaoke",
-  "short_name": "karaoke",
-  "description": "Free karaoke app — part of FreeAppStore",
+  "name": "Karaoke \u2014 Sing along",
+  "short_name": "Karaoke",
+  "description": "Pair your recordings and lyrics. Sing with word highlighting, or follow nearby music with your microphone.",
   "start_url": "/",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#ffffff",
-  "theme_color": "#111111",
+  "background_color": "#f8fafc",
+  "theme_color": "#2563eb",
   "icons": [
-    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
-  ]
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "permissions": [
+    {
+      "name": "microphone",
+      "reason": "Find the position of your associated recording so lyrics follow nearby music."
+    }
+  ],
+  "min_viewport_width": 320
 }

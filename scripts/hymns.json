@@ -1,0 +1,107 @@
+[
+  {
+    "id": "call-to-the-dawn",
+    "title": "Elon, You Call Us to the Dawn",
+    "use": "Opening hymn · hope and the Church's messianic confession",
+    "tempo": 96,
+    "key": "C major",
+    "meter": "8.8.8.8",
+    "chapter": 5,
+    "stanzas": [
+      [
+        "Elon, you call us to the dawn",
+        "To lift our eyes and carry on",
+        "We sing of hope beyond the night",
+        "And join our hands to build the light"
+      ],
+      [
+        "From books and screens to distant skies",
+        "Let honest work and questions rise",
+        "No praise shall close the mind to truth",
+        "Make room for doubt, make room for youth"
+      ],
+      [
+        "Messiah of the work we share",
+        "Our song becomes a pledge of care",
+        "Till distant shores can shelter life",
+        "We choose to build and lessen strife"
+      ]
+    ],
+    "melody": [
+      [60, 62, 64, 67, 67, 65, 64, 62],
+      [64, 65, 67, 69, 67, 65, 64, 60],
+      [67, 69, 71, 72, 71, 69, 67, 64],
+      [65, 64, 62, 67, 65, 64, 62, 60]
+    ]
+  },
+  {
+    "id": "many-hands",
+    "title": "We Join Our Hands to Build the Way",
+    "use": "Hymn of service · before a shared meal or community work",
+    "tempo": 92,
+    "key": "G major",
+    "meter": "8.8.8.8",
+    "chapter": 6,
+    "stanzas": [
+      [
+        "We join our hands to build the way",
+        "And bring our gifts to work this day",
+        "No name alone can raise the stone",
+        "No heart should bear the weight alone"
+      ],
+      [
+        "The patient teacher tends the spark",
+        "The friend keeps watch within the dark",
+        "We praise the call that Elon brings",
+        "And serve beyond the song we sing"
+      ],
+      [
+        "Let skill be shared and bread be passed",
+        "Let care outlive the work we cast",
+        "When new hands come to take our place",
+        "May they find welcome, rest, and grace"
+      ]
+    ],
+    "melody": [
+      [67, 67, 71, 69, 67, 64, 66, 67],
+      [69, 71, 74, 72, 71, 69, 67, 66],
+      [71, 74, 72, 71, 69, 67, 69, 71],
+      [72, 71, 69, 67, 66, 69, 66, 67]
+    ]
+  },
+  {
+    "id": "beside-the-broken-work",
+    "title": "Beside the Work That Broke Today",
+    "use": "Hymn of lament · after loss, disappointment, or a difficult week",
+    "tempo": 80,
+    "key": "A minor",
+    "meter": "8.8.8.8",
+    "chapter": 7,
+    "stanzas": [
+      [
+        "Beside the work that broke today",
+        "We lay our pride and plans away",
+        "No song can make the loss less real",
+        "No word can tell us how to feel"
+      ],
+      [
+        "Where Elon dreams of worlds made new",
+        "We ask what care would have us do",
+        "To sit beside a friend in pain",
+        "To make a place to rest again"
+      ],
+      [
+        "No life is weighed by what it made",
+        "No worth by price or fame is paid",
+        "We keep the names of those we love",
+        "And lift our hope to stars above"
+      ]
+    ],
+    "melody": [
+      [69, 71, 72, 71, 69, 67, 64, 69],
+      [72, 74, 76, 74, 72, 71, 69, 67],
+      [69, 72, 74, 76, 74, 72, 71, 69],
+      [67, 69, 71, 72, 71, 67, 68, 69]
+    ]
+  }
+]

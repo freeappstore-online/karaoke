@@ -10,7 +10,7 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       workbox: {
-        globPatterns: ['**/*.{js,css,html,png,svg,ico,woff2,wasm,json}'],
+        globPatterns: ['**/*.{js,css,html,png,svg,ico,woff2,wasm,json,wav}'],
         maximumFileSizeToCacheInBytes: 10 * 1024 * 1024,
         // Force the new SW to activate immediately instead of waiting for
         // all tabs to close. Combined with registerType: 'autoUpdate' this
