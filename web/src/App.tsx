@@ -21,6 +21,7 @@ export default function App() {
   }, [])
   const navigate = (href: string) => {
     window.history.pushState(null, '', href)
+    window.dispatchEvent(new PopStateEvent('popstate'))
     setPath(new URL(href, window.location.href).pathname)
   }
   return (
@@ -112,6 +113,8 @@ function Content({ path, navigate }: { path: string; navigate: (href: string) =>
   if (path === '/create')
     return (
       <Editor
+        key={new URLSearchParams(location.search).get('song') || 'new'}
+        source={songs.find((item) => item.id === new URLSearchParams(location.search).get('song'))}
         onSave={(newSong) => {
           setSongs((old) => [...old, newSong])
           setSelected(newSong.id)
@@ -230,6 +233,12 @@ function Content({ path, navigate }: { path: string; navigate: (href: string) =>
             <strong>No account. No uploads.</strong>
             <p>Your recordings and lyrics stay on your device.</p>
           </div>
+          <button
+            className="link-button"
+            onClick={() => navigate(`/create?song=${encodeURIComponent(song.id)}`)}
+          >
+            Edit a copy
+          </button>
           <button className="link-button" onClick={() => void exportSong(song)}>
             ↓ Export song package
           </button>

@@ -20,5 +20,9 @@ The built-in “Test a mid-song excerpt” runs the same matching worker against
 - In Chrome, observed audio playback, lyric-line advancement, pause, and a successful mid-song excerpt match through the actual Web Worker.
 - Verified live manifest, AudioWorklet, and all three full WAV files against local bytes; live hosting permits same-origin microphone access.
 - FreeAppStore CI, compliance, and static deployment passed for the initial release.
-- The browser connection stopped responding before phone-layout, editor persistence, package round-trip, and full end-to-end UI checks could finish. These are outstanding checks, not claimed passes.
+- Browser access recovered. Verified phone layout at 390px, then calibrated the browser's 150% display scaling and checked actual CSS viewport widths of 320, 768 and 1280px with no document overflow. The 320px Shell menu opens and navigates correctly.
+- Verified the tap editor with a two-word practice song, local save/reload, cleanup, enhanced-LRC hymn copying, and route/title updates after saving.
+- Found that the static host ignores byte ranges for WAVs (`200` full body, media seekable range `0..0`). The player now fetches a local Blob before enabling playback/seeking. Verified selection of the 12.5-second lyric resumes actual audio from 12.8 seconds with a `0..70` seekable range.
+- “Edit a copy” reuses the selected recording and exact enhanced LRC, so hymn/custom-song timing can be revised without another file upload.
+- File-package browser round-trip checks remain open: this Chrome extension has local file URL access disabled, and its download observer timed out. No extension permissions were changed. These are verification limits, not claimed passes.
 - Physical speaker-to-microphone tests remain tracked in [issue #1](https://github.com/freeappstore-online/karaoke/issues/1). No private ambient audio was captured for testing.

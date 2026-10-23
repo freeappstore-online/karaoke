@@ -797,3 +797,9 @@ input[type='file'] {
     scroll-behavior: auto !important;
   }
 }
+/* Keep the SDK's full controls usable at 320px; the page still names the app. */
+@media (max-width: 360px) {
+  header:has(> .fas-nav) > div:first-child > span {
+    display: none;
+  }
+}

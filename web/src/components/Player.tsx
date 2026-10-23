@@ -18,6 +18,42 @@ export function Player({ song }: { song: Song }) {
   const follow = useFollow(song),
     toast = useToast()
   const result = follow.result
+  const [playbackUrl, setPlaybackUrl] = useState('')
+  const [recordingReady, setRecordingReady] = useState(false)
+  const [recordingError, setRecordingError] = useState('')
+  const [loadAttempt, setLoadAttempt] = useState(0)
+  useEffect(() => {
+    const controller = new AbortController()
+    const element = audio.current
+    let objectUrl: string | undefined
+    setRecordingReady(false)
+    setPlaybackUrl('')
+    setRecordingError('')
+    // The static host does not support byte ranges. A local Blob gives the
+    // media element a complete seekable recording, including before first play.
+    if (song.audioUrl.startsWith('blob:')) setPlaybackUrl(song.audioUrl)
+    else {
+      void fetch(song.audioUrl, { signal: controller.signal })
+        .then(async (response) => {
+          if (!response.ok) throw new Error('Could not load the associated recording.')
+          const blob = await response.blob()
+          if (controller.signal.aborted) return
+          objectUrl = URL.createObjectURL(
+            new Blob([blob], { type: song.audioUrl.endsWith('.wav') ? 'audio/wav' : blob.type }),
+          )
+          setPlaybackUrl(objectUrl)
+        })
+        .catch((error) => {
+          if (!controller.signal.aborted)
+            setRecordingError(error instanceof Error ? error.message : String(error))
+        })
+    }
+    return () => {
+      controller.abort()
+      element?.pause()
+      if (objectUrl) URL.revokeObjectURL(objectUrl)
+    }
+  }, [song.audioUrl, loadAttempt])
   const [now, setNow] = useState(performance.now())
   useEffect(() => {
     let id = 0
@@ -61,7 +97,7 @@ export function Player({ song }: { song: Song }) {
     }
   }
   const seek = (t: number) => {
-    if (audio.current) {
+    if (audio.current && recordingReady) {
       audio.current.currentTime = t
       setTime(t)
     }
@@ -237,7 +273,8 @@ export function Player({ song }: { song: Song }) {
       </section>
       <audio
         ref={audio}
-        src={song.audioUrl}
+        src={playbackUrl || undefined}
+        onLoadedMetadata={() => setRecordingReady(true)}
         preload="metadata"
         onPlay={() => setPlaying(true)}
         onPause={() => setPlaying(false)}
@@ -246,16 +283,27 @@ export function Player({ song }: { song: Song }) {
           toast.show('The recording could not be loaded. Reattach your audio file if needed.')
         }
       />
+      {recordingError && (
+        <div role="alert" className="error-box">
+          {recordingError}{' '}
+          <button onClick={() => setLoadAttempt((value) => value + 1)}>Try again</button>
+        </div>
+      )}
       {mode === 'play' ? (
         <div className="transport panel">
-          <button className="primary play-button" onClick={() => void toggle()}>
-            {playing ? 'Ⅱ Pause' : '▶ Play song'}
+          <button
+            className="primary play-button"
+            disabled={!recordingReady}
+            onClick={() => void toggle()}
+          >
+            {!recordingReady ? 'Loading recording…' : playing ? 'Ⅱ Pause' : '▶ Play song'}
           </button>
           <label className="seek-label">
             <span className="sr-only">Song position</span>
             <input
               aria-label="Song position"
               type="range"
+              disabled={!recordingReady}
               min="0"
               max={song.duration}
               step="0.05"
@@ -331,7 +379,7 @@ export function Player({ song }: { song: Song }) {
           <button
             key={i}
             className={i === index ? 'selected-line' : ''}
-            disabled={mode === 'listen'}
+            disabled={mode === 'listen' || !recordingReady}
             onClick={() => seek(line.start)}
           >
             <span>{clock(line.start)}</span>

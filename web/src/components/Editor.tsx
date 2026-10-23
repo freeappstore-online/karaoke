@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { PageHeader, useToast } from '@freeappstore/sdk/ui'
-import { clock, parseLrc, tappedLines, validateLines, type Song } from '../lyrics/model'
+import { clock, parseLrc, tappedLines, toLrc, validateLines, type Song } from '../lyrics/model'
 import { decode } from '../audio/decode'
 import { saveSong, type StoredSong } from '../lyrics/storage'
-export function Editor({ onSave }: { onSave: (song: Song) => void }) {
+export function Editor({ onSave, source }: { onSave: (song: Song) => void; source?: Song }) {
   const toast = useToast(),
     player = useRef<HTMLAudioElement>(null)
   const [title, setTitle] = useState(''),
@@ -48,6 +48,35 @@ export function Editor({ onSave }: { onSave: (song: Song) => void }) {
     setTaps([...taps, value])
     setError('')
   }
+  useEffect(() => {
+    if (!source) return
+    const controller = new AbortController()
+    setTitle(`${source.title.slice(0, 190)} (copy)`)
+    setArtist(source.artist)
+    setMethod('lrc')
+    setLyrics(toLrc(source))
+    setBusy(true)
+    void fetch(source.audioUrl, { signal: controller.signal })
+      .then(async (response) => {
+        if (!response.ok) throw new Error('Could not load this recording.')
+        const blob = await response.blob()
+        const decoded = await decode(blob)
+        if (controller.signal.aborted) return
+        setFile(
+          new File([blob], `${source.id}.wav`, {
+            type: source.audioUrl.endsWith('.wav') ? 'audio/wav' : blob.type,
+          }),
+        )
+        setDuration(decoded.duration)
+      })
+      .catch((error) => {
+        if (!controller.signal.aborted) setError(String(error))
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setBusy(false)
+      })
+    return () => controller.abort()
+  }, [source])
   async function attach(file?: File) {
     if (!file) return
     setError('')

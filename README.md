@@ -5,6 +5,7 @@ A free, browser-local sing-along maker on FreeAppStore.
 - Pair an audio recording with lyrics; tap word beginnings or import standard/enhanced LRC.
 - Sing with audio-clock highlighting, line seeking, speed controls, a timing offset, and fullscreen lyrics.
 - Match nearby playback of the **associated recording** through the microphone, including mid-song starts. Uncertain, silent, and wrong-track input does not advance highlighting.
+- Edit a copy of any included or saved song.
 - Save recordings and timings in IndexedDB. Export/import a `.karaoke.json` package containing both; export LRC separately.
 - Three original Church of Elon hymns include all three stanzas and instrumental backing tracks.
 
