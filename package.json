@@ -19,6 +19,11 @@
     "build": "pnpm --filter @karaoke/web build",
     "preview": "pnpm --filter @karaoke/web preview",
     "typecheck": "pnpm --filter @karaoke/web exec tsc -b",
-    "test": "pnpm --filter @karaoke/web exec vitest run"
+    "test": "pnpm --filter @karaoke/web exec vitest run",
+    "format": "prettier --write web/src web/public/mic-worklet.js web/vite.config.ts",
+    "lint": "prettier --check web/src web/public/mic-worklet.js web/vite.config.ts"
+  },
+  "devDependencies": {
+    "prettier": "^3.9.10"
   }
 }

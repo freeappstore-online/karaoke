@@ -6,24 +6,243 @@ import { type Song } from './lyrics/model'
 import { download, loadSongs, removeSong } from './lyrics/storage'
 import { Player } from './components/Player'
 import { Editor } from './components/Editor'
-const fas=initApp({appId:'karaoke'})
-const NAV: NavItem[]=[{label:'Sing',href:'/',title:'Karaoke — Sing along'},{label:'Make a sing-along',href:'/create',title:'Make a sing-along — Karaoke'},{label:'How it works',href:'/about',title:'How it works — Karaoke'}]
-export default function App(){
-  const[path,setPath]=useState(window.location.pathname)
-  useEffect(()=>{const sync=()=>setPath(window.location.pathname);window.addEventListener('popstate',sync);return()=>window.removeEventListener('popstate',sync)},[])
-  const navigate=(href:string)=>{window.history.pushState(null,'',href);setPath(new URL(href,window.location.href).pathname)}
-  return <Shell app={fas} appName="Karaoke" nav={NAV} onNavigate={navigate}><div className="app-content"><Content path={path} navigate={navigate}/></div><BuildInfo/></Shell>
+const fas = initApp({ appId: 'karaoke' })
+const NAV: NavItem[] = [
+  { label: 'Sing', href: '/', title: 'Karaoke — Sing along' },
+  { label: 'Make a sing-along', href: '/create', title: 'Make a sing-along — Karaoke' },
+  { label: 'How it works', href: '/about', title: 'How it works — Karaoke' },
+]
+export default function App() {
+  const [path, setPath] = useState(window.location.pathname)
+  useEffect(() => {
+    const sync = () => setPath(window.location.pathname)
+    window.addEventListener('popstate', sync)
+    return () => window.removeEventListener('popstate', sync)
+  }, [])
+  const navigate = (href: string) => {
+    window.history.pushState(null, '', href)
+    setPath(new URL(href, window.location.href).pathname)
+  }
+  return (
+    <Shell app={fas} appName="Karaoke" nav={NAV} onNavigate={navigate}>
+      <div className="app-content">
+        <Content path={path} navigate={navigate} />
+      </div>
+      <BuildInfo />
+    </Shell>
+  )
 }
-function Content({path,navigate}:{path:string;navigate:(href:string)=>void}){
-  const[songs,setSongs]=useState<Song[]>(presets as Song[])
-  const[selected,setSelected]=useState(new URLSearchParams(location.search).get('song')||presets[0].id)
-  const[error,setError]=useState(''),toast=useToast()
-  useEffect(()=>{let active=true;const urls:string[]=[];void loadSongs().then(local=>{if(!active)return;setSongs([...presets as Song[],...local.map(item=>{const audioUrl=URL.createObjectURL(item.audio);urls.push(audioUrl);return{...item,audioUrl}})])}).catch(()=>setError('Local storage is unavailable. You can still sing the included songs.'));return()=>{active=false;urls.forEach(url=>URL.revokeObjectURL(url))}},[])
-  const song=songs.find(item=>item.id===selected)||songs[0]
-  function choose(id:string){setSelected(id);history.replaceState(null,'',`/?song=${encodeURIComponent(id)}`)}
-  async function exportSong(song:Song){try{const response=await fetch(song.audioUrl);if(!response.ok)throw new Error('Audio unavailable');const blob=await response.blob();const data=await new Promise<string>((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result));reader.onerror=()=>reject(reader.error);reader.readAsDataURL(new Blob([blob],{type:blob.type.startsWith('audio/')?blob.type:'audio/wav'}))});const{audioUrl:_,local:__,...metadata}=song;download(new Blob([JSON.stringify({version:1,song:metadata,audio:data})],{type:'application/json'}),`${song.id}.karaoke.json`);toast.show('Song package exported.',{variant:'success'})}catch(e){toast.show(String(e),{variant:'error'})}}
-  async function remove(song:Song){try{await removeSong(song.id);setSongs(old=>old.filter(s=>s.id!==song.id));if(song.audioUrl.startsWith('blob:'))URL.revokeObjectURL(song.audioUrl);setSelected(presets[0].id);toast.show('Removed from this browser. Your exported backups are unchanged.')}catch{toast.show('Could not remove this song.',{variant:'error'})}}
-  if(path==='/create')return <Editor onSave={newSong=>{setSongs(old=>[...old,newSong]);setSelected(newSong.id);navigate(`/?song=${newSong.id}`)}}/>
-  if(path==='/about')return <><PageHeader title="Your song. Your words. Your moment." description="Make a karaoke track, sing along, or let the recording lead."/><div className="about-grid"><section className="panel"><span className="step-number">01</span><h2>Pair a recording and lyrics</h2><p>Add an audio file you have permission to use. Paste plain lyrics and tap the start of each word, or import standard or enhanced LRC timestamps. Save your song locally.</p></section><section className="panel"><span className="step-number">02</span><h2>Press play and sing</h2><p>The audio clock drives highlighting. Seek to a line, slow down for practice, adjust timing by a fraction of a second, or fill the screen. Word highlighting uses your word timestamps; line-timed LRC highlights the whole line.</p></section><section className="panel"><span className="step-number">03</span><h2>Follow music nearby</h2><p>Select the song, choose Listen & follow, then turn on the microphone. Play the same associated recording on a nearby speaker. After several seconds, the app compares audio patterns and tries to find its position, including a start halfway through.</p><p>A different recording, a cover, a cappella singing, large speed changes, loud background sound, or identical repeated passages may not match. Uncertain matches stop highlighting. This is a reference-recording matcher, not a worldwide song-identification service.</p></section><section className="panel"><span className="step-number">04</span><h2>Keep it yours</h2><p>Recordings, lyrics, and microphone processing stay in your browser. Microphone audio is never uploaded or saved. Listening stops when you stop it, switch songs or screens, or hide the page. No account is needed.</p><p>Browser storage can be cleared or evicted. Export a song package to back up both the recording and timed lyrics; import it on another device.</p></section></div><section className="panel"><h2>Three original hymns, ready to sing</h2><p>The Church of Elon examples include all three stanzas, original synthesized instrumental melodies, a four-beat count-in, and short interludes. Words follow syllables in the melody. They are backing tracks for your voice, without a recorded lead singer.</p><a href="https://churchofelon.org/hymns">Visit the Church of Elon hymnal ↗</a></section><p className="muted">Free, open source, MIT licensed. <a href="https://github.com/freeappstore-online/karaoke">Source code</a> · <a href="https://freeappstore.online">FreeAppStore</a></p></>
-  return <><PageHeader title="Find your voice." description="Turn your songs into a sing-along. Follow every word, at your own pace."/>{error&&<p role="status" className="error-box">{error}</p>}<div className="sing-layout"><aside className="library panel" aria-label="Song library"><div className="library-title"><h2>Your setlist</h2><span>{songs.length}</span></div><p>Choose a song and make it yours.</p><div className="song-list">{songs.map((item,i)=><button key={item.id} aria-pressed={song.id===item.id} onClick={()=>choose(item.id)}><span className="song-number">{String(i+1).padStart(2,'0')}</span><span><strong>{item.title}</strong><small>{item.local?'Your recording':'Original hymn · 3 stanzas'}</small></span><span aria-hidden="true">♪</span></button>)}</div><button className="add-song" onClick={()=>navigate('/create')}>＋ Make a sing-along</button><div className="library-note"><strong>No account. No uploads.</strong><p>Your recordings and lyrics stay on your device.</p></div><button className="link-button" onClick={()=>void exportSong(song)}>↓ Export song package</button>{song.local&&<button className="link-button danger" onClick={()=>void remove(song)}>Remove local song</button>}</aside><div className="player-column"><Player key={song.id} song={song}/></div></div></>
+function Content({ path, navigate }: { path: string; navigate: (href: string) => void }) {
+  const [songs, setSongs] = useState<Song[]>(presets as Song[])
+  const [selected, setSelected] = useState(
+    new URLSearchParams(location.search).get('song') || presets[0].id,
+  )
+  const [error, setError] = useState(''),
+    toast = useToast()
+  useEffect(() => {
+    let active = true
+    const urls: string[] = []
+    void loadSongs()
+      .then((local) => {
+        if (!active) return
+        setSongs([
+          ...(presets as Song[]),
+          ...local.map((item) => {
+            const audioUrl = URL.createObjectURL(item.audio)
+            urls.push(audioUrl)
+            return { ...item, audioUrl }
+          }),
+        ])
+      })
+      .catch(() => setError('Local storage is unavailable. You can still sing the included songs.'))
+    return () => {
+      active = false
+      urls.forEach((url) => URL.revokeObjectURL(url))
+    }
+  }, [])
+  const song = songs.find((item) => item.id === selected) || songs[0]
+  function choose(id: string) {
+    setSelected(id)
+    history.replaceState(null, '', `/?song=${encodeURIComponent(id)}`)
+  }
+  async function exportSong(song: Song) {
+    try {
+      const response = await fetch(song.audioUrl)
+      if (!response.ok) throw new Error('Audio unavailable')
+      const blob = await response.blob()
+      const data = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onload = () => resolve(String(reader.result))
+        reader.onerror = () => reject(reader.error)
+        reader.readAsDataURL(
+          new Blob([blob], { type: blob.type.startsWith('audio/') ? blob.type : 'audio/wav' }),
+        )
+      })
+      const metadata = {
+        id: song.id,
+        title: song.title,
+        artist: song.artist,
+        credit: song.credit,
+        duration: song.duration,
+        lines: song.lines,
+        timing: song.timing,
+      }
+      download(
+        new Blob([JSON.stringify({ version: 1, song: metadata, audio: data })], {
+          type: 'application/json',
+        }),
+        `${song.id}.karaoke.json`,
+      )
+      toast.show('Song package exported.', { variant: 'success' })
+    } catch (e) {
+      toast.show(String(e), { variant: 'error' })
+    }
+  }
+  async function remove(song: Song) {
+    try {
+      await removeSong(song.id)
+      setSongs((old) => old.filter((s) => s.id !== song.id))
+      if (song.audioUrl.startsWith('blob:')) URL.revokeObjectURL(song.audioUrl)
+      setSelected(presets[0].id)
+      toast.show('Removed from this browser. Your exported backups are unchanged.')
+    } catch {
+      toast.show('Could not remove this song.', { variant: 'error' })
+    }
+  }
+  if (path === '/create')
+    return (
+      <Editor
+        onSave={(newSong) => {
+          setSongs((old) => [...old, newSong])
+          setSelected(newSong.id)
+          navigate(`/?song=${newSong.id}`)
+        }}
+      />
+    )
+  if (path === '/about')
+    return (
+      <>
+        <PageHeader
+          title="Your song. Your words. Your moment."
+          description="Make a karaoke track, sing along, or let the recording lead."
+        />
+        <div className="about-grid">
+          <section className="panel">
+            <span className="step-number">01</span>
+            <h2>Pair a recording and lyrics</h2>
+            <p>
+              Add an audio file you have permission to use. Paste plain lyrics and tap the start of
+              each word, or import standard or enhanced LRC timestamps. Save your song locally.
+            </p>
+          </section>
+          <section className="panel">
+            <span className="step-number">02</span>
+            <h2>Press play and sing</h2>
+            <p>
+              The audio clock drives highlighting. Seek to a line, slow down for practice, adjust
+              timing by a fraction of a second, or fill the screen. Word highlighting uses your word
+              timestamps; line-timed LRC highlights the whole line.
+            </p>
+          </section>
+          <section className="panel">
+            <span className="step-number">03</span>
+            <h2>Follow music nearby</h2>
+            <p>
+              Select the song, choose Listen & follow, then turn on the microphone. Play the same
+              associated recording on a nearby speaker. After several seconds, the app compares
+              audio patterns and tries to find its position, including a start halfway through.
+            </p>
+            <p>
+              A different recording, a cover, a cappella singing, large speed changes, loud
+              background sound, or identical repeated passages may not match. Uncertain matches stop
+              highlighting. This is a reference-recording matcher, not a worldwide
+              song-identification service.
+            </p>
+          </section>
+          <section className="panel">
+            <span className="step-number">04</span>
+            <h2>Keep it yours</h2>
+            <p>
+              Recordings, lyrics, and microphone processing stay in your browser. Microphone audio
+              is never uploaded or saved. Listening stops when you stop it, switch songs or screens,
+              or hide the page. No account is needed.
+            </p>
+            <p>
+              Browser storage can be cleared or evicted. Export a song package to back up both the
+              recording and timed lyrics; import it on another device.
+            </p>
+          </section>
+        </div>
+        <section className="panel">
+          <h2>Three original hymns, ready to sing</h2>
+          <p>
+            The Church of Elon examples include all three stanzas, original synthesized instrumental
+            melodies, a four-beat count-in, and short interludes. Words follow syllables in the
+            melody. They are backing tracks for your voice, without a recorded lead singer.
+          </p>
+          <a href="https://churchofelon.org/hymns">Visit the Church of Elon hymnal ↗</a>
+        </section>
+        <p className="muted">
+          Free, open source, MIT licensed.{' '}
+          <a href="https://github.com/freeappstore-online/karaoke">Source code</a> ·{' '}
+          <a href="https://freeappstore.online">FreeAppStore</a>
+        </p>
+      </>
+    )
+  return (
+    <>
+      <PageHeader
+        title="Find your voice."
+        description="Turn your songs into a sing-along. Follow every word, at your own pace."
+      />
+      {error && (
+        <p role="status" className="error-box">
+          {error}
+        </p>
+      )}
+      <div className="sing-layout">
+        <aside className="library panel" aria-label="Song library">
+          <div className="library-title">
+            <h2>Your setlist</h2>
+            <span>{songs.length}</span>
+          </div>
+          <p>Choose a song and make it yours.</p>
+          <div className="song-list">
+            {songs.map((item, i) => (
+              <button
+                key={item.id}
+                aria-pressed={song.id === item.id}
+                onClick={() => choose(item.id)}
+              >
+                <span className="song-number">{String(i + 1).padStart(2, '0')}</span>
+                <span>
+                  <strong>{item.title}</strong>
+                  <small>{item.local ? 'Your recording' : 'Original hymn · 3 stanzas'}</small>
+                </span>
+                <span aria-hidden="true">♪</span>
+              </button>
+            ))}
+          </div>
+          <button className="add-song" onClick={() => navigate('/create')}>
+            ＋ Make a sing-along
+          </button>
+          <div className="library-note">
+            <strong>No account. No uploads.</strong>
+            <p>Your recordings and lyrics stay on your device.</p>
+          </div>
+          <button className="link-button" onClick={() => void exportSong(song)}>
+            ↓ Export song package
+          </button>
+          {song.local && (
+            <button className="link-button danger" onClick={() => void remove(song)}>
+              Remove local song
+            </button>
+          )}
+        </aside>
+        <div className="player-column">
+          <Player key={song.id} song={song} />
+        </div>
+      </div>
+    </>
+  )
 }

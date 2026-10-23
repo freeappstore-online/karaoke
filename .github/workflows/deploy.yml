@@ -43,6 +43,9 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile
 
+      - name: Source formatting
+        run: pnpm lint
+
       - name: Signal and lyric tests
         run: pnpm test
 
