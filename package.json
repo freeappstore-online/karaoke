@@ -1,0 +1,15 @@
+{
+  "name": "karaoke",
+  "private": true,
+  "packageManager": "pnpm@10.30.3",
+  "engines": { "node": ">=22" },
+  "pnpm": { "onlyBuiltDependencies": ["esbuild"] },
+  "repository": { "type": "git", "url": "git+https://github.com/freeappstore-online/karaoke.git" },
+  "scripts": {
+    "dev": "pnpm --filter @karaoke/web dev",
+    "build": "pnpm --filter @karaoke/web build",
+    "preview": "pnpm --filter @karaoke/web preview",
+    "typecheck": "pnpm --filter @karaoke/web exec tsc -b",
+    "test": "pnpm --filter @karaoke/web exec tsc -b"
+  }
+}
