@@ -25,6 +25,10 @@
     {
       "name": "microphone",
       "reason": "Find the position of your associated recording so lyrics follow nearby music."
+    },
+    {
+      "name": "screen",
+      "reason": "Record audio from a browser tab you explicitly choose in the source picker."
     }
   ],
   "min_viewport_width": 320

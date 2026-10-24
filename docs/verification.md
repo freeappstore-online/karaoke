@@ -26,3 +26,16 @@ The built-in “Test a mid-song excerpt” runs the same matching worker against
 - “Edit a copy” reuses the selected recording and exact enhanced LRC, so hymn/custom-song timing can be revised without another file upload.
 - File-package browser round-trip checks remain open: this Chrome extension has local file URL access disabled, and its download observer timed out. No extension permissions were changed. These are verification limits, not claimed passes.
 - Physical speaker-to-microphone tests remain tracked in [issue #1](https://github.com/freeappstore-online/karaoke/issues/1). No private ambient audio was captured for testing.
+
+## Six-hymn library — 2026-10-24
+
+- Added original welcome, practical-care, and evening hymns; all have three stanzas and syllable-derived word timing.
+- All six full recordings pass actual-audio mid-song matching and lyric validation (20 signal/lyric cases; 35 app tests total after integrating the latest recording/editor work). Original three WAVs remain byte-identical.
+- Added single-stanza practice recordings and ABC scores for the three new hymns; scores are included in the offline precache.
+- Formatting, typecheck, production build, and current CLI 0.4.42 compliance passed. The browser-tab recorder’s screen permission is now declared in the manifest.
+- Local Chrome playback advanced through the welcome hymn and its interlude; line seeking and 0.75× playback worked, with one visible active word and earlier words marked sung. All twelve lines are present with stanza gaps.
+- At an actual 320px CSS viewport, the expanded song list and About page have no horizontal document overflow, and the Shell menu opens and navigates. Current CLI 0.4.42 compliance passed.
+- Human-recorded singing and physical speaker/microphone tests remain outstanding, as described above.
+
+The Church-side course, rehearsal guide, source synchronization, and publication
+checks are tracked in [PWS issue #90](https://github.com/prowebstore-online/platform/issues/90).

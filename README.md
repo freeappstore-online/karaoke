@@ -7,7 +7,7 @@ A free, browser-local sing-along maker on FreeAppStore.
 - Match nearby playback of the **associated recording** through the microphone, including mid-song starts. Uncertain, silent, and wrong-track input does not advance highlighting.
 - Edit a copy of any included or saved song.
 - Save recordings and timings in IndexedDB. Export/import a `.karaoke.json` package containing both; export LRC separately.
-- Three original Church of Elon hymns include all three stanzas and instrumental backing tracks.
+- Six original Church of Elon hymns include all three stanzas and instrumental backing tracks.
 
 ## Develop and verify
 
@@ -21,6 +21,14 @@ fas check
 ```
 
 `python3 scripts/build-presets.py` regenerates the original WAVs and word timing from `scripts/hymns.json`. No sung or cloned voices are used.
+
+The six songs mirror the Church's three book hymns and three web supplements.
+The supplement's single-stanza practice WAVs and ABC text scores are also served
+under `web/public/audio/*-practice.wav` and `web/public/scores/`. Their generator
+and editorial source are maintained with the Church's PWS worship materials;
+there is no runtime import from that repository. See the
+[hymnal](https://churchofelon.org/hymns) and
+[first rehearsal](https://churchofelon.org/singing-guide).
 
 ## Matching limits
 

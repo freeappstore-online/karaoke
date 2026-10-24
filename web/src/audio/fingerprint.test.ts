@@ -24,7 +24,13 @@ describe('reference-recording matching', () => {
     expect(result.state).toBe('matched')
     expect(Math.abs(result.time - (start + 4.8))).toBeLessThan(0.2)
   })
-  it.each(['many-hands', 'beside-the-broken-work'])('locates a mid-song passage in %s', (name) => {
+  it.each([
+    'many-hands',
+    'beside-the-broken-work',
+    'bring-your-questions',
+    'hope-takes-shape',
+    'let-rest-begin',
+  ])('locates a mid-song passage in %s', (name) => {
     const song = wav(name),
       start = 37.23
     const result = locate(

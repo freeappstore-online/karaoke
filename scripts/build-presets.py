@@ -5,7 +5,7 @@ import array, json, math, re, wave
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SONGS = json.loads((ROOT / 'scripts/hymns.json').read_text())
-SYLLABLES = {w: n for n, words in {2: 'elon carry distant honest questions becomes shelter lessen alone patient teacher within beyond welcome beside today away again above outlive', 3: 'messiah'}.items() for w in words.split()}
+SYLLABLES = {w: n for n, words in {2: 'elon carry distant honest questions becomes shelter lessen alone patient teacher within beyond welcome beside today away again above outlive stories quiet erase excuse living begin morning tonight others kindness', 3: 'messiah'}.items() for w in words.split()}
 RATE = 16000
 DURATIONS = [1, 1, 1, 1, .5, .5, 1, 2]
 def add_note(audio, pitch, start, duration, volume, tone=0):
@@ -21,7 +21,10 @@ def add_note(audio, pitch, start, duration, volume, tone=0):
         if tone: value += .12*math.sin(4*phase)
         audio[first+n] += volume * env * value
 presets = []
+assert len({song['id'] for song in SONGS}) == len(SONGS), 'Duplicate song ID'
 for song in SONGS:
+    assert len(song['stanzas']) == 3 and all(len(stanza) == 4 for stanza in song['stanzas'])
+    assert len(song['melody']) == 4 and all(len(line) == 8 for line in song['melody'])
     beat = 60 / song['tempo']
     # Four-beat count-in, 3 x 32 beats, two four-beat interludes, four-beat tail.
     duration = 112 * beat

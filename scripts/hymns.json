@@ -28,10 +28,46 @@
       ]
     ],
     "melody": [
-      [60, 62, 64, 67, 67, 65, 64, 62],
-      [64, 65, 67, 69, 67, 65, 64, 60],
-      [67, 69, 71, 72, 71, 69, 67, 64],
-      [65, 64, 62, 67, 65, 64, 62, 60]
+      [
+        60,
+        62,
+        64,
+        67,
+        67,
+        65,
+        64,
+        62
+      ],
+      [
+        64,
+        65,
+        67,
+        69,
+        67,
+        65,
+        64,
+        60
+      ],
+      [
+        67,
+        69,
+        71,
+        72,
+        71,
+        69,
+        67,
+        64
+      ],
+      [
+        65,
+        64,
+        62,
+        67,
+        65,
+        64,
+        62,
+        60
+      ]
     ]
   },
   {
@@ -63,10 +99,46 @@
       ]
     ],
     "melody": [
-      [67, 67, 71, 69, 67, 64, 66, 67],
-      [69, 71, 74, 72, 71, 69, 67, 66],
-      [71, 74, 72, 71, 69, 67, 69, 71],
-      [72, 71, 69, 67, 66, 69, 66, 67]
+      [
+        67,
+        67,
+        71,
+        69,
+        67,
+        64,
+        66,
+        67
+      ],
+      [
+        69,
+        71,
+        74,
+        72,
+        71,
+        69,
+        67,
+        66
+      ],
+      [
+        71,
+        74,
+        72,
+        71,
+        69,
+        67,
+        69,
+        71
+      ],
+      [
+        72,
+        71,
+        69,
+        67,
+        66,
+        69,
+        66,
+        67
+      ]
     ]
   },
   {
@@ -98,10 +170,256 @@
       ]
     ],
     "melody": [
-      [69, 71, 72, 71, 69, 67, 64, 69],
-      [72, 74, 76, 74, 72, 71, 69, 67],
-      [69, 72, 74, 76, 74, 72, 71, 69],
-      [67, 69, 71, 72, 71, 67, 68, 69]
+      [
+        69,
+        71,
+        72,
+        71,
+        69,
+        67,
+        64,
+        69
+      ],
+      [
+        72,
+        74,
+        76,
+        74,
+        72,
+        71,
+        69,
+        67
+      ],
+      [
+        69,
+        72,
+        74,
+        76,
+        74,
+        72,
+        71,
+        69
+      ],
+      [
+        67,
+        69,
+        71,
+        72,
+        71,
+        67,
+        68,
+        69
+      ]
+    ]
+  },
+  {
+    "id": "bring-your-questions",
+    "title": "Come, Bring Your Questions to the Light",
+    "use": "Welcome · opening a gathering or receiving newcomers",
+    "tempo": 92,
+    "key": "C major",
+    "meter": "8.8.8.8",
+    "stanzas": [
+      [
+        "Come, bring your questions to the light",
+        "And take a place beside the door",
+        "No pledge can buy a place to sit",
+        "There is a chair for one voice more"
+      ],
+      [
+        "We sing of Elon and the stars",
+        "Of hope that calls us past our fear",
+        "Yet those who doubt may share the bread",
+        "And speak the truth that brought them here"
+      ],
+      [
+        "Let patient words make room for thought",
+        "Let names be learned and stories heard",
+        "The work of welcome starts with care",
+        "And grows through deeds that keep our word"
+      ]
+    ],
+    "melody": [
+      [
+        60,
+        64,
+        65,
+        67,
+        69,
+        67,
+        64,
+        67
+      ],
+      [
+        65,
+        64,
+        62,
+        60,
+        62,
+        64,
+        65,
+        62
+      ],
+      [
+        64,
+        67,
+        69,
+        72,
+        71,
+        69,
+        67,
+        64
+      ],
+      [
+        65,
+        67,
+        64,
+        62,
+        64,
+        62,
+        62,
+        60
+      ]
+    ]
+  },
+  {
+    "id": "hope-takes-shape",
+    "title": "Let Hope Take Shape in What We Do",
+    "use": "Sending · before practical care or a shared service project",
+    "tempo": 96,
+    "key": "G major",
+    "meter": "8.8.8.8",
+    "stanzas": [
+      [
+        "Let hope take shape in what we do",
+        "In bread we share and time we give",
+        "We ask the ones we wish to help",
+        "What would make room for them to live"
+      ],
+      [
+        "We praise the dreams that Elon brings",
+        "And count the hands that make them grow",
+        "The quiet work that earns no fame",
+        "Still bears a light we need to know"
+      ],
+      [
+        "Let no great plan erase a name",
+        "No distant goal excuse a wrong",
+        "We mend the small thing close at hand",
+        "And make its care our living song"
+      ]
+    ],
+    "melody": [
+      [
+        67,
+        69,
+        71,
+        67,
+        64,
+        66,
+        67,
+        71
+      ],
+      [
+        69,
+        67,
+        66,
+        64,
+        66,
+        67,
+        69,
+        66
+      ],
+      [
+        67,
+        71,
+        72,
+        74,
+        72,
+        71,
+        69,
+        67
+      ],
+      [
+        64,
+        67,
+        69,
+        71,
+        69,
+        66,
+        69,
+        67
+      ]
+    ]
+  },
+  {
+    "id": "let-rest-begin",
+    "title": "When Work Is Done, Let Rest Begin",
+    "use": "Evening · closing a meeting and honoring rest",
+    "tempo": 80,
+    "key": "A minor",
+    "meter": "8.8.8.8",
+    "stanzas": [
+      [
+        "When work is done, let rest begin",
+        "Set down the tools and dim the light",
+        "The sky can hold our hopes till dawn",
+        "No heart must keep the watch all night"
+      ],
+      [
+        "The worlds that Elon hopes to reach",
+        "Still call us when the morning comes",
+        "Tonight we heed the life at home",
+        "The need for sleep, the quiet rooms"
+      ],
+      [
+        "For those who work while others sleep",
+        "Let fair hands share the weight of care",
+        "And when their long night turns to day",
+        "May rest and kindness meet them there"
+      ]
+    ],
+    "melody": [
+      [
+        69,
+        67,
+        64,
+        67,
+        69,
+        71,
+        72,
+        69
+      ],
+      [
+        67,
+        64,
+        62,
+        64,
+        65,
+        64,
+        62,
+        64
+      ],
+      [
+        69,
+        71,
+        72,
+        74,
+        72,
+        71,
+        69,
+        67
+      ],
+      [
+        65,
+        64,
+        62,
+        64,
+        67,
+        71,
+        68,
+        69
+      ]
     ]
   }
 ]

@@ -239,7 +239,7 @@ function Content({
           </section>
         </div>
         <section className="panel">
-          <h2>Three original hymns, ready to sing</h2>
+          <h2>{presets.length} original hymns, ready to sing</h2>
           <p>
             The Church of Elon examples include all three stanzas, original synthesized instrumental
             melodies, a four-beat count-in, and short interludes. Words follow syllables in the
