@@ -3,6 +3,7 @@ import { PageHeader, useToast } from '@freeappstore/sdk/ui'
 import { clock, parseLrc, tappedLines, toLrc, validateLines, type Song } from '../lyrics/model'
 import { decode } from '../audio/decode'
 import { saveSong, type StoredSong } from '../lyrics/storage'
+import { parseSongPackage } from '../lyrics/package'
 import { useTabRecorder } from '../hooks/useTabRecorder'
 export function Editor({ onSave, source }: { onSave: (song: Song) => void; source?: Song }) {
   const toast = useToast(),
@@ -137,32 +138,17 @@ export function Editor({ onSave, source }: { onSave: (song: Song) => void; sourc
     try {
       if (file.size > 58 * 1024 * 1024)
         throw new Error('Song package is too large (maximum 58 MB).')
-      const data = JSON.parse(await file.text())
-      if (
-        data.version !== 1 ||
-        typeof data.audio !== 'string' ||
-        !data.audio.startsWith('data:audio/') ||
-        typeof data.song?.title !== 'string' ||
-        data.song.title.length > 200 ||
-        typeof data.song.artist !== 'string' ||
-        data.song.artist.length > 200 ||
-        !['line', 'word'].includes(data.song.timing)
-      )
-        throw new Error('This is not a supported Karaoke song package.')
-      const binary = atob(data.audio.split(',')[1])
-      if (binary.length > 40 * 1024 * 1024) throw new Error('Recording exceeds 40 MB.')
-      const blob = new Blob([Uint8Array.from(binary, (c) => c.charCodeAt(0))], {
-        type: data.audio.slice(5, data.audio.indexOf(';')),
-      })
+      const { song, audio: blob } = parseSongPackage(await file.text())
       const decoded = await decode(blob)
-      validateLines(data.song.lines, decoded.duration)
+      validateLines(song.lines, decoded.duration)
       const stored: StoredSong = {
         id: crypto.randomUUID(),
-        title: data.song.title,
-        artist: data.song.artist,
+        title: song.title,
+        artist: song.artist,
+        credit: song.credit,
         duration: decoded.duration,
-        lines: data.song.lines,
-        timing: data.song.timing,
+        lines: song.lines,
+        timing: song.timing,
         local: true,
         audio: blob,
       }

@@ -3,6 +3,7 @@ import { initApp } from '@freeappstore/sdk'
 import { BuildInfo, type NavItem, PageHeader, Shell, useToast } from '@freeappstore/sdk/ui'
 import presets from './data/presets.json'
 import { type Song } from './lyrics/model'
+import { serializeSongPackage } from './lyrics/package'
 import { download, loadSongs, removeSong } from './lyrics/storage'
 import { Player } from './components/Player'
 import { Editor } from './components/Editor'
@@ -79,17 +80,8 @@ function Content({ path, navigate }: { path: string; navigate: (href: string) =>
           new Blob([blob], { type: blob.type.startsWith('audio/') ? blob.type : 'audio/wav' }),
         )
       })
-      const metadata = {
-        id: song.id,
-        title: song.title,
-        artist: song.artist,
-        credit: song.credit,
-        duration: song.duration,
-        lines: song.lines,
-        timing: song.timing,
-      }
       download(
-        new Blob([JSON.stringify({ version: 1, song: metadata, audio: data })], {
+        new Blob([serializeSongPackage(song, data)], {
           type: 'application/json',
         }),
         `${song.id}.karaoke.json`,

@@ -20,10 +20,12 @@
     "preview": "pnpm --filter @karaoke/web preview",
     "typecheck": "pnpm --filter @karaoke/web exec tsc -b",
     "test": "pnpm --filter @karaoke/web exec vitest run",
+    "test:e2e": "playwright test",
     "format": "prettier --write web/src web/public/mic-worklet.js web/vite.config.ts",
     "lint": "prettier --check web/src web/public/mic-worklet.js web/vite.config.ts"
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.1",
     "prettier": "^3.9.10"
   }
 }
