@@ -36,8 +36,10 @@ export function useFollow(song: Song) {
       if (document.hidden) stop()
     }
     document.addEventListener('visibilitychange', hidden)
+    window.addEventListener('pagehide', stop)
     return () => {
       document.removeEventListener('visibilitychange', hidden)
+      window.removeEventListener('pagehide', stop)
       stop()
     }
   }, [song.id, stop])
@@ -60,6 +62,9 @@ export function useFollow(song: Song) {
         return
       }
       resources.current.stream = stream
+      stream.getTracks().forEach((track) => {
+        track.onended = stop
+      })
       const context = new AudioContext()
       resources.current.context = context
       await context.resume()
@@ -138,9 +143,6 @@ export function useFollow(song: Song) {
           [pcm.buffer],
         )
       }
-      stream.getTracks().forEach((track) => {
-        track.onended = stop
-      })
       setResult({ state: 'listening', time: 0, at: 0, score: 0 })
     } catch (error) {
       if (generation.current !== gen) return
@@ -150,7 +152,13 @@ export function useFollow(song: Song) {
         time: 0,
         at: 0,
         score: 0,
-        message: error instanceof Error ? error.message : String(error),
+        message:
+          error instanceof DOMException &&
+          (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError')
+            ? 'Microphone permission was denied. Allow microphone access in your browser and try again.'
+            : error instanceof Error
+              ? error.message
+              : String(error),
       })
     }
   }
