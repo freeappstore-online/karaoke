@@ -10,7 +10,8 @@ export function Editor({ onSave, source }: { onSave: (song: Song) => void; sourc
   const tabRecorder = useTabRecorder()
   const [title, setTitle] = useState(''),
     [artist, setArtist] = useState(''),
-    [lyrics, setLyrics] = useState('')
+    [lyrics, setLyrics] = useState(''),
+    [recordingName, setRecordingName] = useState('Tab recording')
   const [file, setFile] = useState<File>(),
     [url, setUrl] = useState(''),
     [duration, setDuration] = useState(0),
@@ -215,11 +216,14 @@ export function Editor({ onSave, source }: { onSave: (song: Song) => void; sourc
             <button
               type="button"
               disabled={
-                busy || tabRecorder.status === 'requesting' || tabRecorder.status === 'stopping'
+                busy ||
+                tabRecorder.status === 'requesting' ||
+                tabRecorder.status === 'recording' ||
+                tabRecorder.status === 'stopping'
               }
               onClick={() => void tabRecorder.start()}
             >
-              Record from tab
+              Record from browser tab
             </button>
             <p className="muted">
               Choose a browser tab and enable audio sharing in the picker. Some desktop browsers
@@ -228,14 +232,22 @@ export function Editor({ onSave, source }: { onSave: (song: Song) => void; sourc
             </p>
             {tabRecorder.status === 'requesting' && <p role="status">Choose a source to share…</p>}
             {tabRecorder.status === 'recording' && (
-              <div className="button-row">
+              <div className="form-stack">
                 <p role="status">Recording · {clock(tabRecorder.elapsed)}</p>
-                <button type="button" onClick={tabRecorder.stop}>
-                  Stop
-                </button>
-                <button type="button" onClick={tabRecorder.cancel}>
-                  Cancel
-                </button>
+                <label className="recording-level">
+                  Input level
+                  <meter min="0" max="100" value={tabRecorder.level}>
+                    {tabRecorder.level}%
+                  </meter>
+                </label>
+                <div className="button-row">
+                  <button type="button" onClick={tabRecorder.stop}>
+                    Stop
+                  </button>
+                  <button type="button" onClick={tabRecorder.cancel}>
+                    Cancel
+                  </button>
+                </div>
               </div>
             )}
             {tabRecorder.status === 'stopping' && <p role="status">Finishing recording…</p>}
@@ -243,16 +255,25 @@ export function Editor({ onSave, source }: { onSave: (song: Song) => void; sourc
               <div className="form-stack">
                 <p>Preview your recording before adding it to this song.</p>
                 <audio controls src={tabRecorder.previewUrl} />
+                <label>
+                  Recording name
+                  <input
+                    maxLength={190}
+                    value={recordingName}
+                    onChange={(event) => setRecordingName(event.target.value)}
+                    placeholder="Name this recording"
+                  />
+                </label>
                 <div className="button-row">
                   <button
                     type="button"
-                    disabled={busy}
+                    disabled={busy || !recordingName.trim()}
                     onClick={() => {
                       const type = tabRecorder.preview!.type
                       const extension = type.includes('ogg') ? 'ogg' : 'webm'
                       const captured = new File(
                         [tabRecorder.preview!],
-                        `Tab recording.${extension}`,
+                        `${recordingName.trim()}.${extension}`,
                         { type },
                       )
                       void attach(captured).then((accepted) => {

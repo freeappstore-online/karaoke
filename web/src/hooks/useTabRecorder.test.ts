@@ -99,6 +99,48 @@ describe('useTabRecorder', () => {
     expect(stopTrack).toHaveBeenCalled()
   })
 
+  it('shows a live input level and closes audio analysis on Stop', async () => {
+    let frame: FrameRequestCallback = () => {}
+    const close = vi.fn(() => Promise.resolve())
+    const cancelFrame = vi.fn()
+    vi.stubGlobal(
+      'requestAnimationFrame',
+      vi.fn((callback: FrameRequestCallback) => {
+        frame = callback
+        return 1
+      }),
+    )
+    vi.stubGlobal('cancelAnimationFrame', cancelFrame)
+    vi.stubGlobal(
+      'AudioContext',
+      class {
+        createMediaStreamSource() {
+          return { connect: vi.fn() }
+        }
+        createAnalyser() {
+          return {
+            fftSize: 1024,
+            getByteTimeDomainData: (samples: Uint8Array) => samples.fill(192),
+          }
+        }
+        resume() {
+          return Promise.resolve()
+        }
+        close = close
+      },
+    )
+    const { result } = renderHook(() => useTabRecorder())
+    await act(async () => {
+      await result.current.start()
+    })
+    act(() => frame(150))
+    expect(result.current.level).toBeGreaterThan(0)
+    act(() => result.current.stop())
+    expect(result.current.level).toBe(0)
+    expect(cancelFrame).toHaveBeenCalledWith(1)
+    expect(close).toHaveBeenCalled()
+  })
+
   it('rejects a shared source without audio and stops its tracks', async () => {
     getDisplayMedia.mockResolvedValueOnce({ ...stream, getAudioTracks: () => [] })
     const { result } = renderHook(() => useTabRecorder())

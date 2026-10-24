@@ -5,12 +5,15 @@ type Status = 'idle' | 'requesting' | 'recording' | 'stopping' | 'preview'
 export function useTabRecorder() {
   const [status, setStatus] = useState<Status>('idle')
   const [elapsed, setElapsed] = useState(0)
+  const [level, setLevel] = useState(0)
   const [preview, setPreview] = useState<Blob | null>(null)
   const [previewUrl, setPreviewUrl] = useState('')
   const [error, setError] = useState('')
   const recorder = useRef<MediaRecorder | null>(null)
   const stream = useRef<MediaStream | null>(null)
   const timer = useRef<ReturnType<typeof setInterval> | null>(null)
+  const meterFrame = useRef<number | null>(null)
+  const meterContext = useRef<AudioContext | null>(null)
   const url = useRef('')
   const cancelled = useRef(false)
   const mounted = useRef(true)
@@ -33,12 +36,49 @@ export function useTabRecorder() {
     timer.current = null
   }
 
+  function stopMeter() {
+    if (meterFrame.current !== null) cancelAnimationFrame(meterFrame.current)
+    meterFrame.current = null
+    if (meterContext.current) void meterContext.current.close()
+    meterContext.current = null
+    if (mounted.current) setLevel(0)
+  }
+
+  function startMeter(audioStream: MediaStream) {
+    if (typeof AudioContext === 'undefined') return
+    try {
+      const context = new AudioContext()
+      meterContext.current = context
+      const source = context.createMediaStreamSource(audioStream)
+      const analyser = context.createAnalyser()
+      analyser.fftSize = 1024
+      source.connect(analyser)
+      const samples = new Uint8Array(analyser.fftSize)
+      let lastUpdate = 0
+      const measure = (timestamp: number) => {
+        analyser.getByteTimeDomainData(samples)
+        if (timestamp - lastUpdate >= 100) {
+          let energy = 0
+          for (const sample of samples) energy += ((sample - 128) / 128) ** 2
+          setLevel(Math.min(100, Math.round(Math.sqrt(energy / samples.length) * 250)))
+          lastUpdate = timestamp
+        }
+        meterFrame.current = requestAnimationFrame(measure)
+      }
+      meterFrame.current = requestAnimationFrame(measure)
+      void context.resume().catch(() => {})
+    } catch {
+      stopMeter()
+    }
+  }
+
   function stop() {
     if (recorder.current?.state === 'recording') {
       setStatus('stopping')
       recorder.current.stop()
     }
     stopTimer()
+    stopMeter()
     stopTracks()
   }
 
@@ -61,6 +101,7 @@ export function useTabRecorder() {
     clearPreview()
     setError('')
     setElapsed(0)
+    setLevel(0)
     setStatus('requesting')
     cancelled.current = false
     const currentRequest = ++request.current
@@ -95,6 +136,7 @@ export function useTabRecorder() {
       mediaRecorder.onerror = () => {
         cancelled.current = true
         stopTimer()
+        stopMeter()
         if (mediaRecorder.state === 'recording') mediaRecorder.stop()
         stopTracks()
         if (mounted.current) {
@@ -105,6 +147,7 @@ export function useTabRecorder() {
       mediaRecorder.onstop = () => {
         recorder.current = null
         stopTimer()
+        stopMeter()
         stopTracks()
         if (!mounted.current || cancelled.current) return
         const blob = new Blob(chunks, { type: mediaRecorder.mimeType || mimeType || 'audio/webm' })
@@ -124,12 +167,14 @@ export function useTabRecorder() {
         })
       })
       mediaRecorder.start(1000)
+      startMeter(audioStream)
       setStatus('recording')
       const started = Date.now()
       timer.current = setInterval(() => setElapsed(Math.floor((Date.now() - started) / 1000)), 250)
     } catch (reason) {
       captured?.getTracks().forEach((track) => track.stop())
       stream.current = null
+      stopMeter()
       if (currentRequest !== request.current || !mounted.current) return
       setStatus('idle')
       setError(
@@ -151,11 +196,12 @@ export function useTabRecorder() {
       request.current++
       cancelled.current = true
       stopTimer()
+      stopMeter()
       if (recorder.current?.state === 'recording') recorder.current.stop()
       stopTracks()
       if (url.current) URL.revokeObjectURL(url.current)
     }
   }, [])
 
-  return { status, elapsed, preview, previewUrl, error, start, stop, cancel, discard }
+  return { status, elapsed, level, preview, previewUrl, error, start, stop, cancel, discard }
 }

@@ -542,6 +542,24 @@ details.panel p {
   font-weight: 500;
   margin-top: 0.5rem;
 }
+.tab-recorder {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  padding: 1rem;
+}
+.tab-recorder audio,
+.recording-level meter {
+  width: 100%;
+}
+.recording-level meter {
+  display: block;
+  height: 1rem;
+  margin-top: 0.35rem;
+  accent-color: var(--accent);
+}
 input[type='file'] {
   font-size: 0.75rem;
   width: 100%;
