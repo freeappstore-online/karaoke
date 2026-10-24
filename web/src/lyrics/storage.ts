@@ -2,11 +2,13 @@ import type { Song } from './model'
 export type StoredSong = Omit<Song, 'audioUrl'> & { audio: Blob }
 export type RecordingDraft = {
   id: string
+  songId?: string
   name: string
   audio: Blob
   duration: number
   title: string
   artist: string
+  credit?: string
   lyrics: string
   method: 'tap' | 'lrc'
   taps: number[]

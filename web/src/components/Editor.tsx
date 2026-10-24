@@ -18,6 +18,8 @@ export function Editor({
   drafts,
   draft,
   source,
+  edit,
+  onDirtyChange,
 }: {
   onSave: (song: Song) => void
   onDraftChange: () => void
@@ -25,12 +27,15 @@ export function Editor({
   drafts: RecordingDraft[]
   draft?: RecordingDraft
   source?: Song
+  edit: boolean
+  onDirtyChange: (dirty: boolean) => void
 }) {
   const toast = useToast(),
     player = useRef<HTMLAudioElement>(null)
   const tabRecorder = useTabRecorder()
   const [title, setTitle] = useState(''),
     [artist, setArtist] = useState(''),
+    [credit, setCredit] = useState(''),
     [lyrics, setLyrics] = useState(''),
     [recordingName, setRecordingName] = useState('Tab recording')
   const [file, setFile] = useState<File>(),
@@ -46,13 +51,16 @@ export function Editor({
   const loadedDraft = useRef<string | undefined>(undefined)
   const draftTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const finishingDraft = useRef(false)
+  const changed = () => onDirtyChange(true)
   const draftSnapshot = (id: string, audio: Blob, name: string): RecordingDraft => ({
     id,
+    songId: edit ? source?.id : undefined,
     audio,
     name,
     duration,
     title,
     artist,
+    credit,
     lyrics,
     method,
     taps,
@@ -88,6 +96,7 @@ export function Editor({
     setDuration(draft.duration)
     setTitle(draft.title)
     setArtist(draft.artist)
+    setCredit(draft.credit || '')
     setLyrics(draft.lyrics)
     setMethod(draft.method)
     setTaps(draft.taps)
@@ -108,7 +117,7 @@ export function Editor({
       clearTimeout(timer)
       if (draftTimer.current === timer) draftTimer.current = null
     }
-  }, [draftId, file, duration, title, artist, lyrics, method, taps])
+  }, [draftId, file, duration, title, artist, credit, lyrics, method, taps])
   const tap = () => {
     if (!player.current || player.current.paused || !duration) {
       toast.show('Play the recording, then tap as each word begins.')
@@ -121,13 +130,15 @@ export function Editor({
       return
     }
     setTaps([...taps, value])
+    changed()
     setError('')
   }
   useEffect(() => {
-    if (!source) return
+    if (!source || draft) return
     const controller = new AbortController()
-    setTitle(`${source.title.slice(0, 190)} (copy)`)
+    setTitle(edit ? source.title : `${source.title.slice(0, 190)} (copy)`)
     setArtist(source.artist)
+    setCredit(source.credit || '')
     setMethod('lrc')
     setLyrics(toLrc(source))
     setBusy(true)
@@ -151,7 +162,7 @@ export function Editor({
         if (!controller.signal.aborted) setBusy(false)
       })
     return () => controller.abort()
-  }, [source])
+  }, [source, edit, draft])
   async function attach(file?: File): Promise<number | null> {
     if (!file) return null
     setError('')
@@ -161,10 +172,10 @@ export function Editor({
       const decoded = await decode(file)
       if (decoded.duration > 3600) throw new Error('Choose a recording shorter than 60 minutes.')
       setFile(file)
+      changed()
       setDuration(decoded.duration)
       setTaps([])
       if (!title) setTitle(file.name.replace(/\.[^.]+$/, ''))
-      setDraftId(undefined)
       return decoded.duration
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e))
@@ -173,7 +184,7 @@ export function Editor({
       setBusy(false)
     }
   }
-  async function save() {
+  async function save(asCopy = false) {
     setError('')
     setBusy(true)
     try {
@@ -183,15 +194,20 @@ export function Editor({
           ? parseLrc(lyrics, duration)
           : { lines: tappedLines(lyrics, taps, duration), timing: 'word' as const }
       const stored: StoredSong = {
-        id: crypto.randomUUID(),
+        id: edit && !asCopy && source?.local ? source.id : crypto.randomUUID(),
         title: title.trim().slice(0, 200),
         artist: artist.trim().slice(0, 200) || 'My recording',
+        credit: credit.trim().slice(0, 200) || undefined,
         duration,
         lines: parsed.lines,
         timing: parsed.timing,
         local: true,
         audio: file,
       }
+      if (edit && !source?.local)
+        throw new Error(
+          'This local song is unavailable. Return to the library and choose Edit song again.',
+        )
       if (draftId) {
         finishingDraft.current = true
         if (draftTimer.current) clearTimeout(draftTimer.current)
@@ -258,7 +274,7 @@ export function Editor({
     })
     const capturedDuration = await attach(captured)
     if (!capturedDuration) return
-    const id = crypto.randomUUID()
+    const id = draftId || crypto.randomUUID()
     const value = {
       ...draftSnapshot(id, captured, captured.name),
       duration: capturedDuration,
@@ -271,6 +287,7 @@ export function Editor({
       setDraftId(id)
       loadedDraft.current = id
       setTitle(value.title)
+      changed()
       tabRecorder.discard()
       onDraftChange()
       toast.show('Recording draft saved in this browser. Add and time lyrics to finish it.', {
@@ -317,8 +334,12 @@ export function Editor({
   return (
     <>
       <PageHeader
-        title="Make a sing-along"
-        description="Pair your recording with lyrics. Time the words once, then sing together."
+        title={edit ? 'Edit song' : 'Make a sing-along'}
+        description={
+          edit
+            ? 'Update this saved song, or save your edits as a copy.'
+            : 'Pair your recording with lyrics. Time the words once, then sing together.'
+        }
       />
       {drafts.length > 0 && (
         <section className="panel form-stack" aria-label="Unfinished recordings">
@@ -342,7 +363,10 @@ export function Editor({
             <input
               maxLength={200}
               value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={(e) => {
+                setTitle(e.target.value)
+                changed()
+              }}
               placeholder="Give your song a name"
             />
           </label>
@@ -351,8 +375,23 @@ export function Editor({
             <input
               maxLength={200}
               value={artist}
-              onChange={(e) => setArtist(e.target.value)}
+              onChange={(e) => {
+                setArtist(e.target.value)
+                changed()
+              }}
               placeholder="Who made this recording?"
+            />
+          </label>
+          <label>
+            Recording credit
+            <input
+              maxLength={200}
+              value={credit}
+              onChange={(e) => {
+                setCredit(e.target.value)
+                changed()
+              }}
+              placeholder="Optional recording credit"
             />
           </label>
           <label className="upload-box">
@@ -469,6 +508,7 @@ export function Editor({
               onChange={(e) => {
                 setMethod(e.target.value as 'tap' | 'lrc')
                 setTaps([])
+                changed()
               }}
             >
               <option value="tap">Tap each word as the recording plays</option>
@@ -485,6 +525,7 @@ export function Editor({
                 setLyrics(e.target.value)
                 setTaps([])
                 setError('')
+                changed()
               }}
               placeholder={
                 method === 'tap'
@@ -539,6 +580,7 @@ export function Editor({
               onClick={() => {
                 const previous = taps.at(-1)!
                 setTaps(taps.slice(0, -1))
+                changed()
                 if (player.current) player.current.currentTime = Math.max(0, previous - 1)
               }}
             >
@@ -548,6 +590,7 @@ export function Editor({
               disabled={!taps.length}
               onClick={() => {
                 setTaps([])
+                changed()
                 if (player.current) {
                   player.current.pause()
                   player.current.currentTime = 0
@@ -566,8 +609,13 @@ export function Editor({
       )}
       <div className="save-row">
         <button className="primary" disabled={busy || !file} onClick={() => void save()}>
-          {busy ? 'Working…' : 'Save & sing'}
+          {busy ? 'Working…' : edit ? 'Save changes' : 'Save & sing'}
         </button>
+        {edit && (
+          <button disabled={busy || !file} onClick={() => void save(true)}>
+            Save as copy
+          </button>
+        )}
         <p>
           Save the completed, timed song in this browser. Export a package from your library to move
           it to another device.

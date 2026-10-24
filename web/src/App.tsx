@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { initApp } from '@freeappstore/sdk'
 import { BuildInfo, type NavItem, PageHeader, Shell, useToast } from '@freeappstore/sdk/ui'
 import presets from './data/presets.json'
@@ -15,26 +15,66 @@ const NAV: NavItem[] = [
 ]
 export default function App() {
   const [path, setPath] = useState(window.location.pathname)
+  const [editorDirty, setEditorDirty] = useState(false)
+  const currentHref = useRef(window.location.pathname + window.location.search)
   useEffect(() => {
-    const sync = () => setPath(window.location.pathname)
+    if (!editorDirty || path !== '/create') return
+    const warn = (event: BeforeUnloadEvent) => {
+      event.preventDefault()
+      event.returnValue = ''
+    }
+    window.addEventListener('beforeunload', warn)
+    return () => window.removeEventListener('beforeunload', warn)
+  }, [editorDirty, path])
+  useEffect(() => {
+    const sync = () => {
+      if (
+        editorDirty &&
+        path === '/create' &&
+        window.location.pathname + window.location.search !== currentHref.current &&
+        !window.confirm('Leave the editor? Unsaved changes will be lost.')
+      ) {
+        window.history.pushState(null, '', currentHref.current)
+        return
+      }
+      currentHref.current = window.location.pathname + window.location.search
+      setEditorDirty(false)
+      setPath(window.location.pathname)
+    }
     window.addEventListener('popstate', sync)
     return () => window.removeEventListener('popstate', sync)
-  }, [])
-  const navigate = (href: string) => {
+  }, [editorDirty, path])
+  const navigate = (href: string, saved = false) => {
+    if (
+      !saved &&
+      editorDirty &&
+      path === '/create' &&
+      !window.confirm('Leave the editor? Unsaved changes will be lost.')
+    )
+      return
+    setEditorDirty(false)
     window.history.pushState(null, '', href)
-    window.dispatchEvent(new PopStateEvent('popstate'))
+    currentHref.current = href
     setPath(new URL(href, window.location.href).pathname)
   }
   return (
     <Shell app={fas} appName="Karaoke" nav={NAV} onNavigate={navigate}>
       <div className="app-content">
-        <Content path={path} navigate={navigate} />
+        <Content path={path} navigate={navigate} onEditorDirty={setEditorDirty} />
       </div>
       <BuildInfo />
     </Shell>
   )
 }
-function Content({ path, navigate }: { path: string; navigate: (href: string) => void }) {
+function Content({
+  path,
+  navigate,
+  onEditorDirty,
+}: {
+  path: string
+  navigate: (href: string, saved?: boolean) => void
+  onEditorDirty: (dirty: boolean) => void
+}) {
   const [songs, setSongs] = useState<Song[]>(presets as Song[])
   const [drafts, setDrafts] = useState<RecordingDraft[]>([])
   const [selected, setSelected] = useState(
@@ -114,20 +154,33 @@ function Content({ path, navigate }: { path: string; navigate: (href: string) =>
   if (path === '/create')
     return (
       <Editor
-        key={
-          new URLSearchParams(location.search).get('song') ||
-          new URLSearchParams(location.search).get('draft') ||
-          'new'
-        }
-        source={songs.find((item) => item.id === new URLSearchParams(location.search).get('song'))}
+        key={location.search || 'new'}
+        source={songs.find(
+          (item) =>
+            item.id ===
+            (new URLSearchParams(location.search).get('edit') ||
+              new URLSearchParams(location.search).get('song')),
+        )}
+        edit={Boolean(new URLSearchParams(location.search).get('edit'))}
         draft={drafts.find((item) => item.id === new URLSearchParams(location.search).get('draft'))}
         drafts={drafts}
+        onDirtyChange={onEditorDirty}
         onDraftChange={refreshDrafts}
-        onResume={(id) => navigate(`/create?draft=${encodeURIComponent(id)}`)}
+        onResume={(id) => {
+          const resumed = drafts.find((item) => item.id === id)
+          navigate(
+            `/create?draft=${encodeURIComponent(id)}${resumed?.songId ? `&edit=${encodeURIComponent(resumed.songId)}` : ''}`,
+          )
+        }}
         onSave={(newSong) => {
-          setSongs((old) => [...old, newSong])
+          onEditorDirty(false)
+          setSongs((old) =>
+            old.some((item) => item.id === newSong.id)
+              ? old.map((item) => (item.id === newSong.id ? newSong : item))
+              : [...old, newSong],
+          )
           setSelected(newSong.id)
-          navigate(`/?song=${newSong.id}`)
+          navigate(`/?song=${newSong.id}`, true)
         }}
       />
     )
@@ -230,7 +283,11 @@ function Content({ path, navigate }: { path: string; navigate: (href: string) =>
                 <button
                   key={item.id}
                   type="button"
-                  onClick={() => navigate(`/create?draft=${encodeURIComponent(item.id)}`)}
+                  onClick={() =>
+                    navigate(
+                      `/create?draft=${encodeURIComponent(item.id)}${item.songId ? `&edit=${encodeURIComponent(item.songId)}` : ''}`,
+                    )
+                  }
                 >
                   Resume {item.title || item.name}
                 </button>
@@ -260,6 +317,14 @@ function Content({ path, navigate }: { path: string; navigate: (href: string) =>
             <strong>No account. No uploads.</strong>
             <p>Your recordings and lyrics stay on your device.</p>
           </div>
+          {song.local && (
+            <button
+              className="link-button"
+              onClick={() => navigate(`/create?edit=${encodeURIComponent(song.id)}`)}
+            >
+              Edit song
+            </button>
+          )}
           <button
             className="link-button"
             onClick={() => navigate(`/create?song=${encodeURIComponent(song.id)}`)}
@@ -276,7 +341,7 @@ function Content({ path, navigate }: { path: string; navigate: (href: string) =>
           )}
         </aside>
         <div className="player-column">
-          <Player key={song.id} song={song} />
+          <Player key={`${song.id}:${song.audioUrl}`} song={song} />
         </div>
       </div>
     </>
