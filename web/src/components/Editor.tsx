@@ -3,9 +3,11 @@ import { PageHeader, useToast } from '@freeappstore/sdk/ui'
 import { clock, parseLrc, tappedLines, toLrc, validateLines, type Song } from '../lyrics/model'
 import { decode } from '../audio/decode'
 import { saveSong, type StoredSong } from '../lyrics/storage'
+import { useTabRecorder } from '../hooks/useTabRecorder'
 export function Editor({ onSave, source }: { onSave: (song: Song) => void; source?: Song }) {
   const toast = useToast(),
     player = useRef<HTMLAudioElement>(null)
+  const tabRecorder = useTabRecorder()
   const [title, setTitle] = useState(''),
     [artist, setArtist] = useState(''),
     [lyrics, setLyrics] = useState('')
@@ -77,8 +79,8 @@ export function Editor({ onSave, source }: { onSave: (song: Song) => void; sourc
       })
     return () => controller.abort()
   }, [source])
-  async function attach(file?: File) {
-    if (!file) return
+  async function attach(file?: File): Promise<boolean> {
+    if (!file) return false
     setError('')
     setBusy(true)
     try {
@@ -89,8 +91,10 @@ export function Editor({ onSave, source }: { onSave: (song: Song) => void; sourc
       setDuration(decoded.duration)
       setTaps([])
       if (!title) setTitle(file.name.replace(/\.[^.]+$/, ''))
+      return true
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e))
+      return false
     } finally {
       setBusy(false)
     }
@@ -207,6 +211,69 @@ export function Editor({ onSave, source }: { onSave: (song: Song) => void; sourc
             />
             <span>Audio stays in this browser · up to 40 MB / 60 minutes</span>
           </label>
+          <div className="tab-recorder">
+            <button
+              type="button"
+              disabled={
+                busy || tabRecorder.status === 'requesting' || tabRecorder.status === 'stopping'
+              }
+              onClick={() => void tabRecorder.start()}
+            >
+              Record from tab
+            </button>
+            <p className="muted">
+              Choose a browser tab and enable audio sharing in the picker. Some desktop browsers
+              require screen sharing permission; tab audio and system audio availability varies by
+              browser. Playback stays in your browser.
+            </p>
+            {tabRecorder.status === 'requesting' && <p role="status">Choose a source to share…</p>}
+            {tabRecorder.status === 'recording' && (
+              <div className="button-row">
+                <p role="status">Recording · {clock(tabRecorder.elapsed)}</p>
+                <button type="button" onClick={tabRecorder.stop}>
+                  Stop
+                </button>
+                <button type="button" onClick={tabRecorder.cancel}>
+                  Cancel
+                </button>
+              </div>
+            )}
+            {tabRecorder.status === 'stopping' && <p role="status">Finishing recording…</p>}
+            {tabRecorder.preview && (
+              <div className="form-stack">
+                <p>Preview your recording before adding it to this song.</p>
+                <audio controls src={tabRecorder.previewUrl} />
+                <div className="button-row">
+                  <button
+                    type="button"
+                    disabled={busy}
+                    onClick={() => {
+                      const type = tabRecorder.preview!.type
+                      const extension = type.includes('ogg') ? 'ogg' : 'webm'
+                      const captured = new File(
+                        [tabRecorder.preview!],
+                        `Tab recording.${extension}`,
+                        { type },
+                      )
+                      void attach(captured).then((accepted) => {
+                        if (accepted) tabRecorder.discard()
+                      })
+                    }}
+                  >
+                    Accept recording
+                  </button>
+                  <button type="button" disabled={busy} onClick={tabRecorder.discard}>
+                    Discard and retry
+                  </button>
+                </div>
+              </div>
+            )}
+            {tabRecorder.error && (
+              <p role="alert" className="error-box">
+                {tabRecorder.error}
+              </p>
+            )}
+          </div>
           {file && (
             <p>
               {file.name} · {clock(duration)}

@@ -34,6 +34,12 @@ Standard LRC has line timing only. Enhanced LRC and the tap editor provide word 
 
 No app-specific account, upload service, paid API, or server storage. Local storage may be evicted; export packages for backup. Microphone audio is transient, never saved. The standard FreeAppStore SDK/shell and platform analytics loader remain in the template; no app-specific analytics are added.
 
+## Recording a browser tab
+
+On `/create`, **Record from tab** opens the browser's source picker. Select a tab and enable audio sharing, then play it, stop the recording, preview it, and accept it into the same lyric timing and local save flow as an imported file. Cancel or discard to retry. The app does not fetch audio from video URLs or upload the recording. Use audio you have permission to record.
+
+Tab audio capture requires a browser and device with `getDisplayMedia` and `MediaRecorder` support, normally a desktop browser in a secure context. Some browsers require a video source in the picker even though the app records only the audio track; source and system audio options differ by browser and operating system. If the selected source has no shared audio, the app asks you to retry. Browser storage still limits accepted recordings to 40 MB and 60 minutes.
+
 ## Delivery
 
 MIT licensed. Provision through `fas publish`; push verified changes directly to `main`. GitHub Actions builds and publishes static assets through the official platform pipeline. See [docs/verification.md](docs/verification.md).
