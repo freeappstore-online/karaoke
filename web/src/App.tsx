@@ -4,7 +4,7 @@ import { BuildInfo, type NavItem, PageHeader, Shell, useToast } from '@freeappst
 import presets from './data/presets.json'
 import { type Song } from './lyrics/model'
 import { serializeSongPackage } from './lyrics/package'
-import { download, loadSongs, removeSong } from './lyrics/storage'
+import { download, loadDrafts, loadSongs, removeSong, type RecordingDraft } from './lyrics/storage'
 import { Player } from './components/Player'
 import { Editor } from './components/Editor'
 const fas = initApp({ appId: 'karaoke' })
@@ -36,6 +36,7 @@ export default function App() {
 }
 function Content({ path, navigate }: { path: string; navigate: (href: string) => void }) {
   const [songs, setSongs] = useState<Song[]>(presets as Song[])
+  const [drafts, setDrafts] = useState<RecordingDraft[]>([])
   const [selected, setSelected] = useState(
     new URLSearchParams(location.search).get('song') || presets[0].id,
   )
@@ -61,6 +62,14 @@ function Content({ path, navigate }: { path: string; navigate: (href: string) =>
       active = false
       urls.forEach((url) => URL.revokeObjectURL(url))
     }
+  }, [])
+  function refreshDrafts() {
+    void loadDrafts()
+      .then(setDrafts)
+      .catch(() => setError('Could not read recording drafts from browser storage.'))
+  }
+  useEffect(() => {
+    refreshDrafts()
   }, [])
   const song = songs.find((item) => item.id === selected) || songs[0]
   function choose(id: string) {
@@ -105,8 +114,16 @@ function Content({ path, navigate }: { path: string; navigate: (href: string) =>
   if (path === '/create')
     return (
       <Editor
-        key={new URLSearchParams(location.search).get('song') || 'new'}
+        key={
+          new URLSearchParams(location.search).get('song') ||
+          new URLSearchParams(location.search).get('draft') ||
+          'new'
+        }
         source={songs.find((item) => item.id === new URLSearchParams(location.search).get('song'))}
+        draft={drafts.find((item) => item.id === new URLSearchParams(location.search).get('draft'))}
+        drafts={drafts}
+        onDraftChange={refreshDrafts}
+        onResume={(id) => navigate(`/create?draft=${encodeURIComponent(id)}`)}
         onSave={(newSong) => {
           setSongs((old) => [...old, newSong])
           setSelected(newSong.id)
@@ -202,6 +219,24 @@ function Content({ path, navigate }: { path: string; navigate: (href: string) =>
             <span>{songs.length}</span>
           </div>
           <p>Choose a song and make it yours.</p>
+          {drafts.length > 0 && (
+            <section className="draft-notice" aria-label="Unfinished recordings">
+              <h3>Unfinished recordings</h3>
+              <p>
+                Your accepted recordings are saved here as drafts until you finish the lyrics and
+                timing.
+              </p>
+              {drafts.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => navigate(`/create?draft=${encodeURIComponent(item.id)}`)}
+                >
+                  Resume {item.title || item.name}
+                </button>
+              ))}
+            </section>
+          )}
           <div className="song-list">
             {songs.map((item, i) => (
               <button

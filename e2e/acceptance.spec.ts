@@ -1,5 +1,108 @@
 import { expect, test } from '@playwright/test'
 
+async function mockTabRecording(page: import('@playwright/test').Page) {
+  await page.addInitScript(() => {
+    class Recorder {
+      static isTypeSupported() {
+        return true
+      }
+      state: RecordingState = 'inactive'
+      mimeType = 'audio/wav'
+      ondataavailable: ((event: { data: Blob }) => void) | null = null
+      onstop: (() => void) | null = null
+      start() {
+        this.state = 'recording'
+      }
+      stop() {
+        this.state = 'inactive'
+        void fetch('/audio/call-to-the-dawn.wav')
+          .then((response) => response.blob())
+          .then((data) => {
+            this.ondataavailable?.({ data })
+            this.onstop?.()
+          })
+      }
+    }
+    Object.defineProperty(window, 'MediaRecorder', { value: Recorder })
+    Object.defineProperty(navigator.mediaDevices, 'getDisplayMedia', {
+      configurable: true,
+      value: async () => new AudioContext().createMediaStreamDestination().stream,
+    })
+  })
+}
+
+async function acceptTabRecording(page: import('@playwright/test').Page, name: string) {
+  await page.goto('/create')
+  await page.getByRole('button', { name: 'Record from browser tab' }).click()
+  await page.getByRole('button', { name: 'Stop', exact: true }).click()
+  await expect(
+    page.getByText('Preview your recording before adding it to this song.'),
+  ).toBeVisible()
+  await page.getByRole('textbox', { name: 'Recording name' }).fill(name)
+  await page.getByRole('button', { name: 'Accept recording' }).click()
+  await expect(page.getByText(`${name}.wav ·`, { exact: false })).toBeVisible()
+}
+
+test('accepted recording survives navigation and reload, resumes, and clears after final save', async ({
+  page,
+}) => {
+  await mockTabRecording(page)
+  await acceptTabRecording(page, 'Recover me')
+  await page.goto('/')
+  await page.reload()
+  await expect(page.getByRole('region', { name: 'Unfinished recordings' })).toContainText(
+    'Recover me',
+  )
+  await page.getByRole('button', { name: 'Resume Recover me' }).click()
+  await expect(page.getByText('Recover me.wav')).toBeVisible()
+  await page.getByRole('combobox', { name: 'Timing method' }).selectOption('lrc')
+  await page.getByRole('textbox', { name: 'Timed lyrics' }).fill('[00:00.00]Hello')
+  await page.getByRole('button', { name: 'Save & sing' }).click()
+  await expect(page.getByRole('region', { name: 'Unfinished recordings' })).toHaveCount(0)
+  await page.reload()
+  await expect(page.getByRole('region', { name: 'Unfinished recordings' })).toHaveCount(0)
+  await expect(page.getByRole('heading', { name: 'Recover me' })).toBeVisible()
+})
+
+test('explicit discard removes an accepted recording draft', async ({ page }) => {
+  await mockTabRecording(page)
+  await acceptTabRecording(page, 'Discard me')
+  await page.goto('/')
+  await page.reload()
+  await page.getByRole('button', { name: 'Resume Discard me' }).click()
+  page.once('dialog', (dialog) => dialog.accept())
+  await page.getByRole('button', { name: 'Discard recording draft' }).click()
+  await expect(page.getByRole('region', { name: 'Unfinished recordings' })).toHaveCount(0)
+  await page.reload()
+  await expect(page.getByRole('region', { name: 'Unfinished recordings' })).toHaveCount(0)
+})
+
+test('storage quota failure keeps the recording preview and explains the risk', async ({
+  page,
+}) => {
+  await mockTabRecording(page)
+  await page.addInitScript(() => {
+    const put = IDBObjectStore.prototype.put
+    Object.defineProperty(IDBObjectStore.prototype, 'put', {
+      value: function (this: IDBObjectStore, value: unknown) {
+        if (this.name === 'drafts') throw new DOMException('Storage full', 'QuotaExceededError')
+        return put.call(this, value)
+      },
+    })
+  })
+  await page.goto('/create')
+  await page.getByRole('button', { name: 'Record from browser tab' }).click()
+  await page.getByRole('button', { name: 'Stop', exact: true }).click()
+  await expect(
+    page.getByText('Preview your recording before adding it to this song.'),
+  ).toBeVisible()
+  await page.getByRole('button', { name: 'Accept recording' }).click()
+  await expect(page.getByRole('alert')).toContainText('Could not save the recording draft')
+  await expect(
+    page.getByText('Preview your recording before adding it to this song.'),
+  ).toBeVisible()
+})
+
 test('full screen control enters and exits the lyric stage', async ({ page }) => {
   await page.goto('/')
   const stage = page.getByRole('region', { name: 'Karaoke lyrics' })

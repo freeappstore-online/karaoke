@@ -2,10 +2,30 @@ import { useEffect, useRef, useState } from 'react'
 import { PageHeader, useToast } from '@freeappstore/sdk/ui'
 import { clock, parseLrc, tappedLines, toLrc, validateLines, type Song } from '../lyrics/model'
 import { decode } from '../audio/decode'
-import { saveSong, type StoredSong } from '../lyrics/storage'
+import {
+  removeDraft,
+  saveDraft,
+  saveSong,
+  type RecordingDraft,
+  type StoredSong,
+} from '../lyrics/storage'
 import { parseSongPackage } from '../lyrics/package'
 import { useTabRecorder } from '../hooks/useTabRecorder'
-export function Editor({ onSave, source }: { onSave: (song: Song) => void; source?: Song }) {
+export function Editor({
+  onSave,
+  onDraftChange,
+  onResume,
+  drafts,
+  draft,
+  source,
+}: {
+  onSave: (song: Song) => void
+  onDraftChange: () => void
+  onResume: (id: string) => void
+  drafts: RecordingDraft[]
+  draft?: RecordingDraft
+  source?: Song
+}) {
   const toast = useToast(),
     player = useRef<HTMLAudioElement>(null)
   const tabRecorder = useTabRecorder()
@@ -20,7 +40,28 @@ export function Editor({ onSave, source }: { onSave: (song: Song) => void; sourc
   const [method, setMethod] = useState<'tap' | 'lrc'>('tap'),
     [taps, setTaps] = useState<number[]>([]),
     [busy, setBusy] = useState(false),
-    [error, setError] = useState('')
+    [error, setError] = useState(''),
+    [draftId, setDraftId] = useState<string>()
+  const draftWrite = useRef<Promise<void>>(Promise.resolve())
+  const loadedDraft = useRef<string | undefined>(undefined)
+  const draftTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const finishingDraft = useRef(false)
+  const draftSnapshot = (id: string, audio: Blob, name: string): RecordingDraft => ({
+    id,
+    audio,
+    name,
+    duration,
+    title,
+    artist,
+    lyrics,
+    method,
+    taps,
+  })
+  const queueDraft = (value: RecordingDraft) => {
+    const write = draftWrite.current.catch(() => {}).then(() => saveDraft(value))
+    draftWrite.current = write
+    return write
+  }
   const words = lyrics.trim() ? lyrics.trim().split(/\s+/) : []
   const currentLine = lyrics
     .trim()
@@ -38,6 +79,36 @@ export function Editor({ onSave, source }: { onSave: (song: Song) => void; sourc
     setUrl(value)
     return () => URL.revokeObjectURL(value)
   }, [file])
+  useEffect(() => {
+    if (!draft || loadedDraft.current === draft.id) return
+    loadedDraft.current = draft.id
+    setDraftId(draft.id)
+    setFile(new File([draft.audio], draft.name, { type: draft.audio.type }))
+    setRecordingName(draft.name.replace(/\.[^.]+$/, ''))
+    setDuration(draft.duration)
+    setTitle(draft.title)
+    setArtist(draft.artist)
+    setLyrics(draft.lyrics)
+    setMethod(draft.method)
+    setTaps(draft.taps)
+  }, [draft])
+  useEffect(() => {
+    if (!draftId || !file || loadedDraft.current !== draftId) return
+    const timer = setTimeout(() => {
+      draftTimer.current = null
+      if (finishingDraft.current) return
+      void queueDraft(draftSnapshot(draftId, file, file.name)).catch(() =>
+        setError(
+          'Could not update the draft in browser storage. Keep this page open or try saving the song.',
+        ),
+      )
+    }, 400)
+    draftTimer.current = timer
+    return () => {
+      clearTimeout(timer)
+      if (draftTimer.current === timer) draftTimer.current = null
+    }
+  }, [draftId, file, duration, title, artist, lyrics, method, taps])
   const tap = () => {
     if (!player.current || player.current.paused || !duration) {
       toast.show('Play the recording, then tap as each word begins.')
@@ -81,8 +152,8 @@ export function Editor({ onSave, source }: { onSave: (song: Song) => void; sourc
       })
     return () => controller.abort()
   }, [source])
-  async function attach(file?: File): Promise<boolean> {
-    if (!file) return false
+  async function attach(file?: File): Promise<number | null> {
+    if (!file) return null
     setError('')
     setBusy(true)
     try {
@@ -93,10 +164,11 @@ export function Editor({ onSave, source }: { onSave: (song: Song) => void; sourc
       setDuration(decoded.duration)
       setTaps([])
       if (!title) setTitle(file.name.replace(/\.[^.]+$/, ''))
-      return true
+      setDraftId(undefined)
+      return decoded.duration
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e))
-      return false
+      return null
     } finally {
       setBusy(false)
     }
@@ -120,13 +192,94 @@ export function Editor({ onSave, source }: { onSave: (song: Song) => void; sourc
         local: true,
         audio: file,
       }
+      if (draftId) {
+        finishingDraft.current = true
+        if (draftTimer.current) clearTimeout(draftTimer.current)
+        await queueDraft(draftSnapshot(draftId, file, file.name)).catch(() => {})
+      }
       await saveSong(stored)
+      if (draftId) {
+        try {
+          await removeDraft(draftId)
+          setDraftId(undefined)
+          onDraftChange()
+        } catch {
+          toast.show(
+            'Song saved, but its draft could not be removed. You can discard the draft later.',
+            {
+              variant: 'error',
+            },
+          )
+        }
+      }
       toast.show('Saved in this browser. Export a song package to keep a backup.', {
         variant: 'success',
       })
       onSave({ ...stored, audioUrl: URL.createObjectURL(file) })
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e))
+    } finally {
+      finishingDraft.current = false
+      setBusy(false)
+    }
+  }
+  async function discardDraft() {
+    if (
+      !draftId ||
+      !window.confirm('Discard this unfinished recording and its audio? This cannot be undone.')
+    )
+      return
+    setBusy(true)
+    try {
+      finishingDraft.current = true
+      if (draftTimer.current) clearTimeout(draftTimer.current)
+      await draftWrite.current.catch(() => {})
+      await removeDraft(draftId)
+      setDraftId(undefined)
+      setFile(undefined)
+      setDuration(0)
+      setUrl('')
+      setTaps([])
+      onDraftChange()
+      toast.show('Recording draft discarded.')
+    } catch (reason) {
+      setError(`Could not discard the draft: ${String(reason)}`)
+    } finally {
+      finishingDraft.current = false
+      setBusy(false)
+    }
+  }
+  async function acceptRecording() {
+    if (!tabRecorder.preview) return
+    const type = tabRecorder.preview.type
+    const extension = type.includes('ogg') ? 'ogg' : type.includes('wav') ? 'wav' : 'webm'
+    const captured = new File([tabRecorder.preview], `${recordingName.trim()}.${extension}`, {
+      type,
+    })
+    const capturedDuration = await attach(captured)
+    if (!capturedDuration) return
+    const id = crypto.randomUUID()
+    const value = {
+      ...draftSnapshot(id, captured, captured.name),
+      duration: capturedDuration,
+      title: title || recordingName.trim(),
+      taps: [],
+    }
+    setBusy(true)
+    try {
+      await queueDraft(value)
+      setDraftId(id)
+      loadedDraft.current = id
+      setTitle(value.title)
+      tabRecorder.discard()
+      onDraftChange()
+      toast.show('Recording draft saved in this browser. Add and time lyrics to finish it.', {
+        variant: 'success',
+      })
+    } catch {
+      setError(
+        'Could not save the recording draft. Browser storage may be full. Your recording is still on this page; keep it open and try again or finish the song now.',
+      )
     } finally {
       setBusy(false)
     }
@@ -167,6 +320,20 @@ export function Editor({ onSave, source }: { onSave: (song: Song) => void; sourc
         title="Make a sing-along"
         description="Pair your recording with lyrics. Time the words once, then sing together."
       />
+      {drafts.length > 0 && (
+        <section className="panel form-stack" aria-label="Unfinished recordings">
+          <h2>Unfinished recordings</h2>
+          <p>
+            These recordings are saved in this browser as drafts. Add lyrics and timing, then Save &
+            sing.
+          </p>
+          {drafts.map((item) => (
+            <button type="button" key={item.id} onClick={() => onResume(item.id)}>
+              Resume {item.title || item.name}
+            </button>
+          ))}
+        </section>
+      )}
       <div className="editor-grid">
         <section className="panel form-stack">
           <h2>1. Your song</h2>
@@ -254,22 +421,18 @@ export function Editor({ onSave, source }: { onSave: (song: Song) => void; sourc
                   <button
                     type="button"
                     disabled={busy || !recordingName.trim()}
-                    onClick={() => {
-                      const type = tabRecorder.preview!.type
-                      const extension = type.includes('ogg') ? 'ogg' : 'webm'
-                      const captured = new File(
-                        [tabRecorder.preview!],
-                        `${recordingName.trim()}.${extension}`,
-                        { type },
-                      )
-                      void attach(captured).then((accepted) => {
-                        if (accepted) tabRecorder.discard()
-                      })
-                    }}
+                    onClick={() => void acceptRecording()}
                   >
                     Accept recording
                   </button>
-                  <button type="button" disabled={busy} onClick={tabRecorder.discard}>
+                  <button
+                    type="button"
+                    disabled={busy}
+                    onClick={() => {
+                      if (window.confirm('Discard this recorded audio? This cannot be undone.'))
+                        tabRecorder.discard()
+                    }}
+                  >
                     Discard and retry
                   </button>
                 </div>
@@ -284,7 +447,13 @@ export function Editor({ onSave, source }: { onSave: (song: Song) => void; sourc
           {file && (
             <p>
               {file.name} · {clock(duration)}
+              {draftId ? ' · Draft saved in this browser' : ''}
             </p>
+          )}
+          {draftId && (
+            <button type="button" disabled={busy} onClick={() => void discardDraft()}>
+              Discard recording draft
+            </button>
           )}
           <p className="muted">
             Use audio and lyrics you have permission to use. The included hymns are original,
@@ -400,8 +569,8 @@ export function Editor({ onSave, source }: { onSave: (song: Song) => void; sourc
           {busy ? 'Working…' : 'Save & sing'}
         </button>
         <p>
-          Saved locally, without an account. Export a package from your library to move it to
-          another device.
+          Save the completed, timed song in this browser. Export a package from your library to move
+          it to another device.
         </p>
       </div>
       <details className="panel">
