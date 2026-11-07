@@ -1,6 +1,0 @@
-{
-  "appId": "karaoke",
-  "applicationRoot": "web",
-  "outputPath": "web/dist",
-  "buildCommand": "pnpm build"
-}
